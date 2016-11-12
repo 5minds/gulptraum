@@ -1,0 +1,9 @@
+{
+  "paths": {
+    "root": ".",
+    "source": "src/",
+    "tests": "test/",
+    "output": "dist/",
+    "testOutput": "dist-test/"
+  }
+}
