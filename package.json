@@ -46,7 +46,7 @@
     "gulp-mocha": "^3.0.1",
     "gulp-rename": "^1.2.2",
     "gulp-typedoc": "^2.0.0",
-    "gulp-typescript": "^2.13.6",
+    "gulp-typescript": "^2.14.1",
     "gulp-util": "^3.0.7",
     "lodash.flatten": "^4.4.0",
     "lodash.groupby": "^4.6.0",
