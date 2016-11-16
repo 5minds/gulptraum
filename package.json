@@ -8,28 +8,25 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/5minds/JS.Foundation.git"
-  },
-  "babel": {
-    "resolveModuleSource": "./node_modules"
+    "url": "git+https://github.com/gulptraum.git"
   },
   "keywords": [
     "javascript",
     "build",
-    "gulp"
+    "gulp",
+    "system"
   ],
   "author": "5Minds IT-Solutions GmbH & Co. KG <info@5minds.de>",
   "maintainers": [
-    "Martin Möllenbeck <martin.moellenbeck@5minds.de"
+    "Sebastian Meier <sebastian.meier@5minds.de>"
   ],
   "contributors": [
-    "Sebastian Meier <sebastian.meier@5minds.de>"
   ],
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/5minds/JS.Foundation/issues"
+    "url": "https://github.com/5minds/gulptraum/issues"
   },
-  "homepage": "https://github.com/5minds/JS.Foundation#readme",
+  "homepage": "https://github.com/5minds/gulptraum#readme",
   "devDependencies": {},
   "dependencies": {
     "aurelia-tools": "^0.2.4",
