@@ -37,7 +37,9 @@
     "deepmerge": "^1.1.0",
     "del": "^2.2.1",
     "gulp": "^3.9.1",
+    "gulp-bump": "^2.5.0",
     "gulp-concat": "^2.6.0",
+    "gulp-conventional-changelog": "^1.1.0",
     "gulp-ignore": "^2.0.1",
     "gulp-insert": "^0.5.0",
     "gulp-mocha": "^3.0.1",
@@ -55,6 +57,7 @@
     "tslint": "^3.15.1",
     "typedoc": "^0.5.1",
     "typescript": "^2.0.10",
-    "vinyl-paths": "^2.1.0"
+    "vinyl-paths": "^2.1.0",
+    "yargs": "^6.4.0"
   }
 }
