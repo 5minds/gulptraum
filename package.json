@@ -20,7 +20,9 @@
   "maintainers": [
     "Sebastian Meier <sebastian.meier@5minds.de>"
   ],
-  "contributors": [],
+  "contributors": [
+    "Martin Möllenbeck <martin.moellenbeck@5minds.de>"
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/5minds/gulptraum/issues"
