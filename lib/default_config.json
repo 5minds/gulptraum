@@ -4,6 +4,7 @@
     "source": "src/",
     "tests": "test/",
     "output": "dist/",
-    "testOutput": "dist-test/"
+    "testOutput": "dist-test/",
+    "doc": "doc/"
   }
 }
