@@ -1,3 +1,6 @@
+
+![logo](logo.png)
+
 # Gulptraum
 
 A simple-to-use build system based on gulp.
