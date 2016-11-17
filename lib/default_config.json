@@ -4,6 +4,9 @@
     "source": "src/",
     "tests": "test/",
     "output": "dist/",
-    "testOutput": "dist-test/"
-  }
+    "testOutput": "dist-test/",
+    "doc": "doc/",
+    "changelog": "./CHANGELOG.md"
+  },
+  "suppressErrors": false
 }
