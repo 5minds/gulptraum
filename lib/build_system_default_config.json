@@ -1,5 +1,6 @@
 {
   "suppressErrors": false,
+  "backupSetupFiles": true,
   "paths": {
     "root": ".",
     "source": "src/",
@@ -7,6 +8,7 @@
     "output": "dist/",
     "testOutput": "dist-test/",
     "doc": "doc/",
+    "setup": ".",
     "changelog": "./CHANGELOG.md"
   },
   "conventional_tasks": {
@@ -29,6 +31,10 @@
     "doc": {
       "help": "Generates documentation",
       "dependencies": ["test"]
+    },
+    "setup-dev": {
+      "help": "Copies typical .files for your plugins.",
+      "dependencies": []
     }
   }
 }
