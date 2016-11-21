@@ -1,6 +1,6 @@
 'use strict';
 
-const gulptraum = require('@5minds/gulptraum');
+const gulptraum = require('gulptraum');
 
 const buildSystemConfig = {
   packageName: 'gulptraum',
