@@ -1,5 +1,5 @@
 {
-  "name": "@5minds/gulptraum",
+  "name": "gulptraum",
   "publishConfig": {
     "registry": "https://www.npmjs.com"
   },
@@ -14,16 +14,21 @@
     "javascript",
     "build",
     "gulp",
-    "system"
+    "system",
+    "cli"
   ],
-  "author": "5Minds IT-Solutions GmbH & Co. KG <info@5minds.de>",
+  "author": {
+    "name": "5Minds IT-Solutions GmbH & Co. KG",
+    "email": "info@5minds.de",
+    "url": "https://5minds.de"
+  },
   "maintainers": [
     "Sebastian Meier <sebastian.meier@5minds.de>"
   ],
   "contributors": [
     "Martin Möllenbeck <martin.moellenbeck@5minds.de>"
   ],
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/5minds/gulptraum/issues"
   },
