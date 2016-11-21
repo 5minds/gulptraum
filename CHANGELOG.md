@@ -6,7 +6,7 @@
 * **config:** Fix plugin config overwrites. ([709e1ea](http://github.com/gulptraum/commit/709e1ea))
 * **conventional_tasks:** Fix conventional tasks not executing with dependencies ([518f2ac](http://github.com/gulptraum/commit/518f2ac))
 * **help:** Fix help discovery for conventional tasks ([8654c45](http://github.com/gulptraum/commit/8654c45))
-
+* **prepare_release:** bump version before generating the changelog ([5e591f4](http://github.com/gulptraum/commit/5e591f4))
 
 ### Features
 
