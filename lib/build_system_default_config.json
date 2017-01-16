@@ -35,6 +35,10 @@
     "setup-dev": {
       "help": "Copies typical .files for your plugins.",
       "dependencies": []
+    },
+    "watch": {
+      "help": "Watches source files for changes and executes a certain task.",
+      "dependencies": ["build"]
     }
   }
 }
