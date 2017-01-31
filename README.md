@@ -8,7 +8,6 @@ A simple-to-use build system based on gulp.
 # Features
 
 ```
-
 * Fluent Declaration Syntax for your gulpfile.js
 
 * Plugins for popular technologies that provide all tasks you need like
@@ -23,6 +22,7 @@ A simple-to-use build system based on gulp.
   * SASS
 
 ```
+
 ## Introduction
 
 gulptraum is a build system you can configure using a fluent syntax.
@@ -120,38 +120,38 @@ We recommend you use the build system config as a base for your own configuratio
 
 #### Configuration
 
-| Setting | Type | Description |
-|---|---|---|
-|paths|Object|Contains global application paths|
-|paths.root|String|Your application root path (all other paths are relative to this path)|
-|paths.source|String|Your source folder path|
-|paths.tests|String|Your source tests path|
-|paths.output|String|The output directory for build tasks|
-|paths.testOutput|String|The output directory for building tests|
-|paths.doc|String|The output directory for generated documentation|
-|paths.setup|String|The output directory for generated code style files|
-|paths.typings|String|Glob pattern for your type definition files|
-|paths.excludes|Array of Strings |Glob patterns to exclude from sources|
-|sort|Boolean|True if contents should be merged in alphabetical order|
-|useTypeScriptForDTS|Boolean|True if type definitions should be generated from your TypeScript files|
-|importsToAdd|Array of Strings|Resources you additionally want to require in your built code|
-|paths.tslintConfig|String|Path to your `tslint.json` file|
-|paths.compileToModules|Array of Strings|The module types generated from your TypeScript sources|
+| Setting                | Type             | Description                                                             |
+| ---------------------- | ---------------- | ----------------------------------------------------------------------- |
+| paths                  | Object           | Contains global application paths                                       |
+| paths.root             | String           | Your application root path (all other paths are relative to this path)  |
+| paths.source           | String           | Your source folder path                                                 |
+| paths.tests            | String           | Your source tests path                                                  |
+| paths.output           | String           | The output directory for build tasks                                    |
+| paths.testOutput       | String           | The output directory for building tests                                 |
+| paths.doc              | String           | The output directory for generated documentation                        |
+| paths.setup            | String           | The output directory for generated code style files                     |
+| paths.typings          | String           | Glob pattern for your type definition files                             |
+| paths.excludes         | Array of Strings | Glob patterns to exclude from sources                                   |
+| sort                   | Boolean          | True if contents should be merged in alphabetical order                 |
+| useTypeScriptForDTS    | Boolean          | True if type definitions should be generated from your TypeScript files |
+| importsToAdd           | Array of Strings | Resources you additionally want to require in your built code           |
+| paths.tslintConfig     | String           | Path to your `tslint.json` file                                         |
+| paths.compileToModules | Array of Strings | The module types generated from your TypeScript sources                 |
 
 ### SASS
 
-| Setting | Type | Description |
-|---|---|---|
-|paths|Object|Contains global application paths|
-|paths.root|String|Your application root path (all other paths are relative to this path)|
-|paths.source|String|Your source folder path|
-|paths.output|String|The output directory for build tasks|
-|paths.doc|String|The output directory for generated documentation|
-|paths.setup|String|The output directory for generated code style files|
-|sort|Boolean|True if contents should be merged in alphabetical order|
-|useTypeScriptForDTS|Boolean|True if type definitions should be generated from your TypeScript files|
-|importsToAdd|Array of Strings|Resources you additionally want to require in your built code|
-|paths.sasslintConfig|String|Path to your `sass-lint.yml` file|
+| Setting              | Type             | Description                                                             |
+| -------------------- | ---------------- | ----------------------------------------------------------------------- |
+| paths                | Object           | Contains global application paths                                       |
+| paths.root           | String           | Your application root path (all other paths are relative to this path)  |
+| paths.source         | String           | Your source folder path                                                 |
+| paths.output         | String           | The output directory for build tasks                                    |
+| paths.doc            | String           | The output directory for generated documentation                        |
+| paths.setup          | String           | The output directory for generated code style files                     |
+| sort                 | Boolean          | True if contents should be merged in alphabetical order                 |
+| useTypeScriptForDTS  | Boolean          | True if type definitions should be generated from your TypeScript files |
+| importsToAdd         | Array of Strings | Resources you additionally want to require in your built code           |
+| paths.sasslintConfig | String           | Path to your `sass-lint.yml` file                                       |
 
 #### Configuration
 
@@ -270,19 +270,19 @@ However you can overwrite each configuration completely to customize the behavio
 
 The build system configuration defines the main paths for your application. These paths are also used in the plugin-specific default configurations.
 
-| Setting | Type | Description |
-|---|---|---|
-|paths|Object|Contains global application paths|
-|paths.root|String|Your application root path (all other paths are relative to this path)|
-|paths.source|String|Your source folder path|
-|paths.tests|String|Your source tests path|
-|paths.output|String|The output directory for build tasks|
-|paths.testOutput|String|The output directory for building tests|
-|paths.doc|String|The output directory for generated documentation|
-|paths.setup|String|The output directory for generated code style files|
-|paths.changelog|String|The path of your CHANGELOG.md file|
-|paths.excludes|Array of Strings |Glob patterns to exclude from sources|
-|packageName|String|The name of your application|
-|sort|Boolean|True if contents should be merged in alphabetical order|
-|suppressErrors|Boolean|True if errors should not be output to the console|
-|backupSetupFiles|Boolean|True if existing code style files should be backuped before copying new ones|
+| Setting          | Type             | Description                                                                  |
+| ---------------- | ---------------- | ---------------------------------------------------------------------------- |
+| paths            | Object           | Contains global application paths                                            |
+| paths.root       | String           | Your application root path (all other paths are relative to this path)       |
+| paths.source     | String           | Your source folder path                                                      |
+| paths.tests      | String           | Your source tests path                                                       |
+| paths.output     | String           | The output directory for build tasks                                         |
+| paths.testOutput | String           | The output directory for building tests                                      |
+| paths.doc        | String           | The output directory for generated documentation                             |
+| paths.setup      | String           | The output directory for generated code style files                          |
+| paths.changelog  | String           | The path of your CHANGELOG.md file                                           |
+| paths.excludes   | Array of Strings | Glob patterns to exclude from sources                                        |
+| packageName      | String           | The name of your application                                                 |
+| sort             | Boolean          | True if contents should be merged in alphabetical order                      |
+| suppressErrors   | Boolean          | True if errors should not be output to the console                           |
+| backupSetupFiles | Boolean          | True if existing code style files should be backuped before copying new ones |
