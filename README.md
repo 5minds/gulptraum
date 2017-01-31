@@ -1,4 +1,3 @@
-
 ![logo](logo.png)
 
 # gulptraum
@@ -8,7 +7,7 @@ A simple-to-use build system based on gulp.
 # Features
 
 ```
-* Fluent Declaration Syntax for your gulpfile.js
+* Fluent Declaration Syntax for your `gulpfile.js`
 
 * Plugins for popular technologies that provide all tasks you need like
    * build   * test   * clean   * doc   * lint   * prepare-release   * setup-dev
@@ -20,7 +19,6 @@ A simple-to-use build system based on gulp.
 * Technologies supported:
   * TypeScript 2
   * SASS
-
 ```
 
 ## Introduction
@@ -28,7 +26,7 @@ A simple-to-use build system based on gulp.
 gulptraum is a build system you can configure using a fluent syntax.
 You can configure the technologies you would like to work with and optionally provide additional configuration for each plugin.
 
-gulptraum will then make sure the corresponding gulp tasks are automatically generated when the gulpfile.js is used (that is when you run a gulp command).
+gulptraum will then make sure the corresponding gulp tasks are automatically generated when the `gulpfile.js` is used (that is when you run a gulp command).
 
 So by configuring gulptraum you get to use a collection of gulp tasks that take care of the typical work you want the task runner to take care of.
 
@@ -37,7 +35,6 @@ So by configuring gulptraum you get to use a collection of gulp tasks that take 
 The following code snippet shows an example `gulpfile.js`.
 
 ```javascript
-
 const gulptraum = require('gulptraum');
 const gulp = require('gulp');
 
@@ -166,21 +163,22 @@ The convention in that reads as follows:
 ***{conventional-task} - {plugin} - {plugin-task} - {plugin-subtask}***
 
 That means there might exist tasks like:
-* gulp build
-* gulp build-typescript
-* gulp build-typescript-dts
+
+* `gulp build`
+* `gulp build-typescript`
+* `gulp build-typescript-dts`
 
 So let's assume you got the `sass` and the `typescript` plugins registered to gulptraum.
 
 Now if you run:
 
-```
+```shell
 gulp build
 ```
 
 that means gulptraum executes the following automatically for you:
 
-```
+```shell
 gulp build-sass
 gulp build-typescript
 ```
@@ -235,7 +233,7 @@ The `help` task shows you the help descriptions for tasks registered to gulp.
 
 If you supply the task name as a parameter you can get the help for a specific task directly.
 
-```
+```shell
 gulp help --task build
 
 [16:17:14] Using gulpfile ~/_dev/5minds/addict-ioc/gulpfile.js
