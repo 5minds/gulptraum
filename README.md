@@ -41,13 +41,7 @@ The following code snippet shows an example `gulpfile.js`.
 const gulptraum = require('gulptraum');
 const gulp = require('gulp');
 
-
-const buildSystemConfig = {
-  packageName: 'your-npm-package-name'
-};
-
 const buildSystem = new gulptraum.BuildSystem(buildSystemConfig);
-
 
 buildSystem
   .registerPlugin('typescript', gulptraum.plugins.typescript)
