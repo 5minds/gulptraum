@@ -3,7 +3,7 @@
   "publishConfig": {
     "registry": "https://www.npmjs.com"
   },
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Smart task generator for gulp to get a build pipeline and more in seconds.",
   "main": "index.js",
   "repository": {
