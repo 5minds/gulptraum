@@ -39,12 +39,12 @@
   },
   "homepage": "https://github.com/5minds/gulptraum#readme",
   "devDependencies": {
-    "gulptraum": "^2.0.0",
-    "gulptraum-typescript": "^1.0.0",
     "@types/node": "^8.0.15",
     "eslint": "^3.4.0",
     "eslint-config-5minds": "0.0.4",
     "eslint-plugin-import": "^1.14.0",
+    "gulptraum": "^2.0.0",
+    "gulptraum-typescript": "^1.0.0",
     "tsconfig": "^6.0.0",
     "tslint-config-5minds": "^1.0.2"
   },

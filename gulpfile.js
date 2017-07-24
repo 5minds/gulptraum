@@ -1,10 +1,10 @@
 'use strict';
 
-const gulptraum = require('@process-engine-js/gulptraum');
+const gulptraum = require('gulptraum');
+const gulptraumTypescriptPlugin = require('gulptraum-typescript');
 const tsconfig = require('tsconfig');
 
 const buildSystemConfig = {
-  packageName: 'core'
 };
 
 const buildSystem = new gulptraum.BuildSystem(buildSystemConfig);
@@ -18,5 +18,5 @@ const typeScriptConfig = {
 const gulp = require('gulp');
 
 buildSystem
-  .registerPlugin('typescript', gulptraum.plugins.typescript, typeScriptConfig)
+  .registerPlugin('typescript', gulptraumTypescriptPlugin, typeScriptConfig)
   .registerTasks(gulp);
