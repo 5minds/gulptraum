@@ -11,14 +11,14 @@ A simple-to-use build system based on gulp.
 
 * Fluent Declaration Syntax for your gulpfile.js
 
-* Plugins for popular technologies that provide all tasks you need like
+* Conventional tasks for common problems - automagically integrating with plugins
    * build   * test   * clean   * doc   * lint   * prepare-release   * setup-dev
 
 * Default Configurations for an easy setup
 
 * Setup a build pipeline with plugins in minutes
 
-* Technologies supported:
+* Current plugins:
   * TypeScript 2
   * SASS
 
