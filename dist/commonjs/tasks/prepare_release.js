@@ -1,21 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const yargs = require("yargs");
-const fs = require("fs");
-const path = require("path");
-const bump = require("gulp-bump");
-const conventionalChangelog = require("gulp-conventional-changelog");
+var yargs = require("yargs");
+var fs = require("fs");
+var path = require("path");
+var bump = require("gulp-bump");
+var conventionalChangelog = require("gulp-conventional-changelog");
 function generate(gulp, config, gulptraum) {
     gulp.task('prepare-release-generate-changelog', function prepareRelease() {
-        const changelogPath = path.resolve(config.paths.changelog);
-        const changelogExists = fs.existsSync(changelogPath);
+        var changelogPath = path.resolve(config.paths.changelog);
+        var changelogExists = fs.existsSync(changelogPath);
         if (!changelogExists) {
             fs.writeFileSync(changelogPath, '');
         }
-        const srcOptions = {
+        var srcOptions = {
             buffer: false,
         };
-        const conventionalChangelogOptions = {
+        var conventionalChangelogOptions = {
             preset: 'angular',
         };
         return gulp.src(changelogPath, srcOptions)
@@ -23,21 +23,21 @@ function generate(gulp, config, gulptraum) {
             .pipe(gulp.dest('.'));
     });
     gulp.task('prepare-release-bump-version', function bumpVersion() {
-        const argv = yargs.argv;
-        const validBumpTypes = 'major|minor|patch|prerelease'.split('|');
-        const bumpArgument = (argv.bump || 'patch').toLowerCase();
+        var argv = yargs.argv;
+        var validBumpTypes = 'major|minor|patch|prerelease'.split('|');
+        var bumpArgument = (argv.bump || 'patch').toLowerCase();
         if (validBumpTypes.indexOf(bumpArgument) === -1) {
-            throw new Error(`Unrecognized bump "${bumpArgument}".`);
+            throw new Error("Unrecognized bump \"" + bumpArgument + "\".");
         }
-        const bumpOptions = {
+        var bumpOptions = {
             type: bumpArgument,
         };
         return gulp.src(['./package.json', './bower.json'])
             .pipe(bump(bumpOptions))
             .pipe(gulp.dest(config.paths.root));
     });
-    gulp.task('prepare-release', (callback) => {
-        const tasks = [
+    gulp.task('prepare-release', function (callback) {
+        var tasks = [
             'doc',
             'prepare-release-bump-version',
             'prepare-release-generate-changelog',

@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const yargs = require("yargs");
+var yargs = require("yargs");
 function generate(gulp, config, gulptraum) {
-    gulp.task('help', () => {
-        const taskName = yargs.argv.task || '';
-        const helpCommandString = ['help'].concat(taskName)
+    gulp.task('help', function () {
+        var taskName = yargs.argv.task || '';
+        var helpCommandString = ['help'].concat(taskName)
             .join(' ')
             .trim();
         gulptraum.cli.exec(helpCommandString);

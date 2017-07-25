@@ -1,63 +1,67 @@
 'use strict';
 Object.defineProperty(exports, "__esModule", { value: true });
-const path = require("path");
-const merge = require("deepmerge");
-const groupBy = require("lodash.groupby");
-const index_1 = require("./index");
-const child_process_1 = require("child_process");
-const vorpal = require("vorpal");
-const clone = require("clone");
-const gulp = require("gulp");
-const index_2 = require("./adapters/index");
-const systemTasks = require("./tasks/index");
+var path = require("path");
+var merge = require("deepmerge");
+var groupBy = require("lodash.groupby");
+var index_1 = require("./index");
+var child_process_1 = require("child_process");
+var vorpal = require("vorpal");
+var clone = require("clone");
+var gulp = require("gulp");
+var index_2 = require("./adapters/index");
+var systemTasks = require("./tasks/index");
 function mergeArray(destinationArray, sourceArray, mergeOptions) {
     return sourceArray;
 }
-const mergeOptions = {
+var mergeOptions = {
     arrayMerge: mergeArray,
 };
-class BuildSystem {
-    constructor(config) {
+var BuildSystem = (function () {
+    function BuildSystem(config) {
         this.pluginConfigs = new Map();
         this.plugins = new Map();
         this.config = {};
         this.config = config;
         this.initialize();
     }
-    get tasks() {
-        return this.gulpAdapter.getGulpTasks();
-    }
-    initialize() {
+    Object.defineProperty(BuildSystem.prototype, "tasks", {
+        get: function () {
+            return this.gulpAdapter.getGulpTasks();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    BuildSystem.prototype.initialize = function () {
         this.cli = vorpal();
-    }
-    _initializeGulpVersionAdapter() {
-        const isVersion3 = typeof Object.getPrototypeOf(this.gulp).run !== 'undefined';
+    };
+    BuildSystem.prototype._initializeGulpVersionAdapter = function () {
+        var isVersion3 = typeof Object.getPrototypeOf(this.gulp).run !== 'undefined';
         if (isVersion3) {
             this.gulpAdapter = new index_2.GulpV3Adapter(this.gulp, this);
         }
         else {
             this.gulpAdapter = new index_2.GulpV4Adapter(this.gulp, this);
         }
-    }
-    _validateBuildSystemConfig(config) {
+    };
+    BuildSystem.prototype._validateBuildSystemConfig = function (config) {
         if (!config.packageName) {
             try {
-                const packageManifestPath = path.resolve(`${config.paths.root}/package.json`);
-                const packageManifest = require(packageManifestPath);
+                var packageManifestPath = path.resolve(config.paths.root + "/package.json");
+                var packageManifest = require(packageManifestPath);
                 if (packageManifest) {
-                    let name = packageManifest.name;
-                    if (name[0] == '@') {
-                        name = name.slice(1);
+                    var name_1 = packageManifest.name;
+                    if (name_1[0] == '@') {
+                        name_1 = name_1.slice(1);
                     }
-                    config.packageName = name;
+                    config.packageName = name_1;
                 }
             }
             catch (error) {
                 console.log(error);
             }
         }
-    }
-    registerTasks(externalGulp) {
+    };
+    BuildSystem.prototype.registerTasks = function (externalGulp) {
         this.gulp = externalGulp || gulp;
         this._initializeGulpVersionAdapter();
         this.config = this._mergeConfigs(index_1.DefaultBuildSystemConfig, this.config);
@@ -66,197 +70,207 @@ class BuildSystem {
         this._initializePlugins();
         this._registerTasksAfterPlugins();
         this._registerSystemTasks();
-    }
-    _registerSystemTasks() {
-        const systemTasks = this._getSystemTasks();
-        systemTasks.forEach((systemTask) => {
-            this._registerSystemTask(systemTask);
+    };
+    BuildSystem.prototype._registerSystemTasks = function () {
+        var _this = this;
+        var systemTasks = this._getSystemTasks();
+        systemTasks.forEach(function (systemTask) {
+            _this._registerSystemTask(systemTask);
         });
-    }
-    _registerSystemTask(taskName) {
-        const task = this._getSystemTask(taskName);
+    };
+    BuildSystem.prototype._registerSystemTask = function (taskName) {
+        var task = this._getSystemTask(taskName);
         if (!task.excludeTaskFromCli) {
             this._registerTaskToCli(task.name, task.help);
         }
         task.generate(this.gulp, this.config, this);
-    }
-    _getSystemTasks() {
+    };
+    BuildSystem.prototype._getSystemTasks = function () {
         return Object.keys(systemTasks);
-    }
-    _getSystemTask(taskName) {
+    };
+    BuildSystem.prototype._getSystemTask = function (taskName) {
         return systemTasks[taskName];
-    }
-    _initializePlugins() {
-        const pluginsToInitialize = this._getPluginKeysOrderedByPriority();
-        pluginsToInitialize.forEach((plugin) => {
-            this._initializePlugin(plugin);
+    };
+    BuildSystem.prototype._initializePlugins = function () {
+        var _this = this;
+        var pluginsToInitialize = this._getPluginKeysOrderedByPriority();
+        pluginsToInitialize.forEach(function (plugin) {
+            _this._initializePlugin(plugin);
         });
-    }
-    _initializePlugin(name) {
-        const plugin = this._getPlugin(name);
-        const configUsed = this._getResolvedPluginConfig(name);
+    };
+    BuildSystem.prototype._initializePlugin = function (name) {
+        var plugin = this._getPlugin(name);
+        var configUsed = this._getResolvedPluginConfig(name);
         plugin.initializePlugin(this.gulp, configUsed, this);
-    }
-    _registerTasksBeforePlugins() {
-    }
-    _registerTasksAfterPlugins() {
+    };
+    BuildSystem.prototype._registerTasksBeforePlugins = function () {
+    };
+    BuildSystem.prototype._registerTasksAfterPlugins = function () {
         this._registerConventionalTasks();
-    }
-    _registerConventionalTasks() {
-        const conventionalTasks = Object.keys(this.config.conventionalTasks);
-        conventionalTasks.forEach((conventionalTask) => {
-            this._registerConventionalTask(conventionalTask);
+    };
+    BuildSystem.prototype._registerConventionalTasks = function () {
+        var _this = this;
+        var conventionalTasks = Object.keys(this.config.conventionalTasks);
+        conventionalTasks.forEach(function (conventionalTask) {
+            _this._registerConventionalTask(conventionalTask);
         });
-    }
-    _getTasksInRunningOrder(pluginKeys) {
-        const pluginKeysGroupedByPriority = this._getPluginKeysGroupedByPriority();
-        const groupKeys = Object.keys(pluginKeysGroupedByPriority);
-        const groupKeysSorted = groupKeys.sort((a, b) => {
+    };
+    BuildSystem.prototype._getTasksInRunningOrder = function (pluginKeys) {
+        var pluginKeysGroupedByPriority = this._getPluginKeysGroupedByPriority();
+        var groupKeys = Object.keys(pluginKeysGroupedByPriority);
+        var groupKeysSorted = groupKeys.sort(function (a, b) {
             return +b - +a;
         });
-        const allTasks = [];
-        groupKeysSorted.forEach((key) => {
-            const tasks = pluginKeysGroupedByPriority[key];
+        var allTasks = [];
+        groupKeysSorted.forEach(function (key) {
+            var tasks = pluginKeysGroupedByPriority[key];
             allTasks.push(tasks);
         });
         return allTasks;
-    }
-    _getTaskNameByConvention(taskName, pluginKey) {
-        return `${taskName}-${pluginKey}`;
-    }
-    _getBuildTasksForConventionalTask(taskName) {
-        const pluginKeys = this._getPluginKeysOrderedByPriority();
-        const tasksInRunningOrder = this._getTasksInRunningOrder(pluginKeys);
-        const topLevelTasks = tasksInRunningOrder.map((pluginKey) => {
+    };
+    BuildSystem.prototype._getTaskNameByConvention = function (taskName, pluginKey) {
+        return taskName + "-" + pluginKey;
+    };
+    BuildSystem.prototype._getBuildTasksForConventionalTask = function (taskName) {
+        var _this = this;
+        var pluginKeys = this._getPluginKeysOrderedByPriority();
+        var tasksInRunningOrder = this._getTasksInRunningOrder(pluginKeys);
+        var topLevelTasks = tasksInRunningOrder.map(function (pluginKey) {
             if (Array.isArray(pluginKey)) {
-                return pluginKey.map((subKey) => {
-                    return this._getTaskNameByConvention(taskName, subKey);
+                return pluginKey.map(function (subKey) {
+                    return _this._getTaskNameByConvention(taskName, subKey);
                 });
             }
-            return [this._getTaskNameByConvention(taskName, pluginKey)];
+            return [_this._getTaskNameByConvention(taskName, pluginKey)];
         });
-        const tasksRegistered = topLevelTasks.map((subTasks) => {
-            return this._filterUnregisteredTasks(subTasks);
-        });
-        return tasksRegistered;
-    }
-    _filterUnregisteredTasks(tasks) {
-        const tasksRegistered = tasks.filter((task) => {
-            return this.gulpAdapter.isTaskRegistered(task);
+        var tasksRegistered = topLevelTasks.map(function (subTasks) {
+            return _this._filterUnregisteredTasks(subTasks);
         });
         return tasksRegistered;
-    }
-    task(taskName, config, taskCallback) {
-        const help = config.help || 'no help provided';
+    };
+    BuildSystem.prototype._filterUnregisteredTasks = function (tasks) {
+        var _this = this;
+        var tasksRegistered = tasks.filter(function (task) {
+            return _this.gulpAdapter.isTaskRegistered(task);
+        });
+        return tasksRegistered;
+    };
+    BuildSystem.prototype.task = function (taskName, config, taskCallback) {
+        var help = config.help || 'no help provided';
         this._registerTaskToCli(taskName, help);
         return this.gulpAdapter.runTask(taskName, taskCallback);
-    }
-    _registerTaskToCli(taskName, help) {
+    };
+    BuildSystem.prototype._registerTaskToCli = function (taskName, help) {
+        var _this = this;
         this.cli.command(taskName, help)
-            .action((args, callback) => {
-            return this._runTaskFromCli(taskName, args, callback);
+            .action(function (args, callback) {
+            return _this._runTaskFromCli(taskName, args, callback);
         });
-    }
-    _ensureTaskIsRegisteredToCli(taskName) {
-        const isTaskRegisteredToCli = this.cli.find(taskName);
+    };
+    BuildSystem.prototype._ensureTaskIsRegisteredToCli = function (taskName) {
+        var isTaskRegisteredToCli = this.cli.find(taskName);
         if (!isTaskRegisteredToCli) {
             throw new Error('Task "${taskName}" is not registered.');
         }
-    }
-    _runTaskFromCli(taskName, args, callback) {
-        const optionKeys = Object.keys(args.options);
-        const optionStrings = optionKeys.map((optionKey) => {
-            const optionValue = args.options[optionKey];
-            return `--${optionKey} ${optionValue}`;
+    };
+    BuildSystem.prototype._runTaskFromCli = function (taskName, args, callback) {
+        var optionKeys = Object.keys(args.options);
+        var optionStrings = optionKeys.map(function (optionKey) {
+            var optionValue = args.options[optionKey];
+            return "--" + optionKey + " " + optionValue;
         });
         if (optionKeys.length === 0) {
-            return this._runCommandInChildProcess(`gulp ${taskName}`, callback);
+            return this._runCommandInChildProcess("gulp " + taskName, callback);
         }
-        const gulpCommand = ['gulp', taskName].concat(optionStrings)
+        var gulpCommand = ['gulp', taskName].concat(optionStrings)
             .join(' ')
             .trim();
         this._runCommandInChildProcess(gulpCommand, callback);
-    }
-    _runCommandInChildProcess(command, callback) {
-        const commandCallback = (error, stdout, stderr) => {
+    };
+    BuildSystem.prototype._runCommandInChildProcess = function (command, callback) {
+        var commandCallback = function (error, stdout, stderr) {
             console.log(stdout);
             callback();
         };
-        const execOptions = {
+        var execOptions = {
             shell: true,
         };
         child_process_1.exec(command, execOptions, commandCallback);
-    }
-    _registerConventionalTaskToCli(taskName) {
-        const help = this._getHelpForConventionalTask(taskName);
+    };
+    BuildSystem.prototype._registerConventionalTaskToCli = function (taskName) {
+        var help = this._getHelpForConventionalTask(taskName);
         this._registerTaskToCli(taskName, help);
-    }
-    _registerConventionalTask(taskName) {
+    };
+    BuildSystem.prototype._registerConventionalTask = function (taskName) {
         this._registerConventionalTaskToCli(taskName);
-        const taskConfig = this._getConventionalTaskConfig(taskName);
-        const buildTasks = this._getBuildTasksForConventionalTask(taskName);
+        var taskConfig = this._getConventionalTaskConfig(taskName);
+        var buildTasks = this._getBuildTasksForConventionalTask(taskName);
         this.gulpAdapter.registerConventionalTask(taskName, taskConfig, buildTasks);
-    }
-    _getConventionalTaskConfig(taskName) {
+    };
+    BuildSystem.prototype._getConventionalTaskConfig = function (taskName) {
         return this.config.conventionalTasks[taskName];
-    }
-    _getHelpForConventionalTask(taskName) {
-        const taskConfig = this._getConventionalTaskConfig(taskName);
+    };
+    BuildSystem.prototype._getHelpForConventionalTask = function (taskName) {
+        var taskConfig = this._getConventionalTaskConfig(taskName);
         if (!taskConfig) {
             return 'help not found';
         }
         return this.config.conventionalTasks[taskName].help;
-    }
-    _getPluginKeysGroupedByPriority() {
-        const allPluginKeys = this._getPluginKeys();
-        const groupedPluginKeys = groupBy(allPluginKeys, (key) => {
-            const config = this._getPluginConfig(key);
+    };
+    BuildSystem.prototype._getPluginKeysGroupedByPriority = function () {
+        var _this = this;
+        var allPluginKeys = this._getPluginKeys();
+        var groupedPluginKeys = groupBy(allPluginKeys, function (key) {
+            var config = _this._getPluginConfig(key);
             return config.priority;
         });
         return groupedPluginKeys;
-    }
-    _getPluginKeys() {
+    };
+    BuildSystem.prototype._getPluginKeys = function () {
         return Object.keys(this.pluginConfigs);
-    }
-    _getPlugin(name) {
+    };
+    BuildSystem.prototype._getPlugin = function (name) {
         return this.plugins[name];
-    }
-    _getPluginConfig(name) {
+    };
+    BuildSystem.prototype._getPluginConfig = function (name) {
         return this.pluginConfigs[name];
-    }
-    _getPluginDefaultConfig(name) {
+    };
+    BuildSystem.prototype._getPluginDefaultConfig = function (name) {
         if (!this.plugins[name]) {
-            throw new Error(`Default configuration for plugin "${name}" is missing.`);
+            throw new Error("Default configuration for plugin \"" + name + "\" is missing.");
         }
-        const config = clone(this.config);
+        var config = clone(this.config);
         console.log(Object.keys(this.plugins));
         return this.plugins[name].getDefaultConfig(config);
-    }
-    _getResolvedPluginConfig(name) {
-        const pluginConfig = this._getPluginConfig(name);
-        const pluginDefaultConfig = this._getPluginDefaultConfig(name);
-        const resolvedConfig = this._mergeConfigs(pluginDefaultConfig, pluginConfig);
+    };
+    BuildSystem.prototype._getResolvedPluginConfig = function (name) {
+        var pluginConfig = this._getPluginConfig(name);
+        var pluginDefaultConfig = this._getPluginDefaultConfig(name);
+        var resolvedConfig = this._mergeConfigs(pluginDefaultConfig, pluginConfig);
         return resolvedConfig;
-    }
-    _getPluginKeysOrderedByPriority() {
-        const allPluginKeys = this._getPluginKeys();
-        const sortedPluginKeys = allPluginKeys.sort((a, b) => {
-            const pluginAConfig = this._getPluginConfig(a);
-            const pluginBConfig = this._getPluginConfig(b);
+    };
+    BuildSystem.prototype._getPluginKeysOrderedByPriority = function () {
+        var _this = this;
+        var allPluginKeys = this._getPluginKeys();
+        var sortedPluginKeys = allPluginKeys.sort(function (a, b) {
+            var pluginAConfig = _this._getPluginConfig(a);
+            var pluginBConfig = _this._getPluginConfig(b);
             return pluginBConfig.priority - pluginAConfig.priority;
         });
         return sortedPluginKeys;
-    }
-    _mergeConfigs(defaultConfig, config) {
+    };
+    BuildSystem.prototype._mergeConfigs = function (defaultConfig, config) {
         return merge(defaultConfig, config, mergeOptions);
-    }
-    registerPlugin(name, plugin, config, priority = 10) {
+    };
+    BuildSystem.prototype.registerPlugin = function (name, plugin, config, priority) {
+        if (priority === void 0) { priority = 10; }
         this.plugins[name] = plugin;
         this.pluginConfigs[name] = config;
         this.pluginConfigs[name].priority = priority;
         return this;
-    }
-}
+    };
+    return BuildSystem;
+}());
 exports.BuildSystem = BuildSystem;
 
 //# sourceMappingURL=build_system.js.map

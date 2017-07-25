@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const groupBy = require("lodash.groupby");
+var groupBy = require("lodash.groupby");
 function sortTaskNames(taskNames) {
-    const taskNamesSorted = taskNames.sort((nameA, nameB) => {
+    var taskNamesSorted = taskNames.sort(function (nameA, nameB) {
         if (nameA < nameB) {
             return -1;
         }
@@ -14,12 +14,12 @@ function sortTaskNames(taskNames) {
     return taskNamesSorted;
 }
 function generate(gulp, config, gulptraum) {
-    gulp.task('tasks', () => {
-        const taskNames = Object.keys(gulp.tasks);
-        const groupedPluginKeys = groupBy(taskNames, (taskName) => {
-            let topLevelTaskName = null;
+    gulp.task('tasks', function () {
+        var taskNames = Object.keys(gulp.tasks);
+        var groupedPluginKeys = groupBy(taskNames, function (taskName) {
+            var topLevelTaskName = null;
             if (taskName.indexOf('-') > 0) {
-                const taskNameSegments = taskName.split('-');
+                var taskNameSegments = taskName.split('-');
                 topLevelTaskName = taskNameSegments[0];
             }
             else {
@@ -27,13 +27,13 @@ function generate(gulp, config, gulptraum) {
             }
             return topLevelTaskName;
         });
-        const groupKeys = Object.keys(groupedPluginKeys);
-        groupKeys.forEach((groupKey) => {
-            const groupTasks = groupedPluginKeys[groupKey];
-            const groupTasksOrdered = sortTaskNames(groupTasks);
+        var groupKeys = Object.keys(groupedPluginKeys);
+        groupKeys.forEach(function (groupKey) {
+            var groupTasks = groupedPluginKeys[groupKey];
+            var groupTasksOrdered = sortTaskNames(groupTasks);
             console.log('--------------------------------------------------');
-            for (let i = 0; i < groupTasksOrdered.length; i++) {
-                console.log(`----- ${groupTasksOrdered[i]}`);
+            for (var i = 0; i < groupTasksOrdered.length; i++) {
+                console.log("----- " + groupTasksOrdered[i]);
                 if (i === 0 && groupTasksOrdered.length > 1) {
                     console.log('----------------------------------------');
                 }
