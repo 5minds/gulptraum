@@ -24,7 +24,7 @@ export interface IConfigurationHook {
 }
 export interface IPluginConfiguration<T extends IBuildSystemPathsConfiguration = IBuildSystemPathsConfiguration> extends IBuildSystemConfiguration<T> {
     pluginName: string;
-    priority: number;
+    priority?: number;
 }
 export interface IPathsConfiguration {
     [pathName: string]: string;
