@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var vorpal = require("vorpal");
+const vorpal = require("vorpal");
 function generate(gulp, config, gulptraum) {
-    gulp.task('cli', function (callback) {
-        gulptraum.cli.on('vorpal_exit', function () {
+    gulp.task('cli', (callback) => {
+        gulptraum.cli.on('vorpal_exit', () => {
             gulptraum.cli.ui.log('');
             callback();
         });
