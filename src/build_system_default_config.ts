@@ -32,7 +32,7 @@ export const DefaultBuildSystemConfig: IBuildSystemConfiguration<IBuildSystemPat
     },
     doc: {
       help: 'Generates documentation',
-      tasksBefore: ['test']
+      tasksBefore: []
     },
     'setup-dev': {
       help: 'Copies typical .files for your plugins.',
