@@ -354,8 +354,6 @@ export class BuildSystem implements IBuildSystem {
 
     const config = clone(this.config);
 
-    console.log(Object.keys(this.plugins))
-
     return this.plugins[name].getDefaultConfig(config);
   }
 

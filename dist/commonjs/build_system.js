@@ -240,7 +240,6 @@ var BuildSystem = (function () {
             throw new Error("Default configuration for plugin \"" + name + "\" is missing.");
         }
         var config = clone(this.config);
-        console.log(Object.keys(this.plugins));
         return this.plugins[name].getDefaultConfig(config);
     };
     BuildSystem.prototype._getResolvedPluginConfig = function (name) {

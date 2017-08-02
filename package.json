@@ -49,6 +49,7 @@
     "deepmerge": "^1.4.4",
     "gulp-bump": "^2.7.0",
     "gulp-conventional-changelog": "^1.1.4",
+    "gulp-shell": "^0.6.3",
     "lodash.flatten": "^4.4.0",
     "lodash.groupby": "^4.6.0",
     "run-sequence": "^2.0.0",
