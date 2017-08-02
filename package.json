@@ -1,6 +1,6 @@
 {
   "name": "gulptraum",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "description": "Smart task generator for gulp to get a build pipeline and more in seconds.",
   "main": "dist/commonjs/index.js",
   "typings": "dist/index.d.ts",
