@@ -11,7 +11,7 @@ function generate(gulp, config, gulptraum) {
     const releasePnpProdBranch = ((config && config.releasePnpProdBranch) || 'master');
   
     gulp.task('release', shell.task([
-      'PNP_DEVBRANCH=' + releasePnpDevBranch + ' PNP_PRODBRANCH=' + releasePnpProdBranch + ' PNP_BUILDCOMMAND="' + releasePnpBuildCommand + '" sh ' + path.resolve(__dirname, '../../scripts/patch-n-publish.sh')
+      'PNP_DEVBRANCH=' + releasePnpDevBranch + ' PNP_PRODBRANCH=' + releasePnpProdBranch + ' PNP_BUILDCOMMAND="' + releasePnpBuildCommand + '" sh ' + path.resolve(__dirname, '../../../scripts/patch-n-publish.sh')
     ]));
   });
 }
