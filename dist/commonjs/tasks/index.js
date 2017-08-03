@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var cli_1 = require("./cli");
 exports.cli = cli_1.command;
+var copy_1 = require("./copy");
+exports.copy = copy_1.command;
 var help_1 = require("./help");
 exports.help = help_1.command;
 var prepare_release_1 = require("./prepare_release");
