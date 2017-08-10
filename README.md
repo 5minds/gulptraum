@@ -235,6 +235,10 @@ The `setup-dev` task is meant to copy all code style files appropriate for the p
 
 ### System Tasks
 
+#### release
+
+The `release` performs automated steps to compare and sync dev and prod branches along with bumping to a certain version (patch|minor|major) as well as publishing it.
+
 #### prepare-release
 
 The `prepare-release` task is meant to perform automated steps you want to perform before publishing a release.
