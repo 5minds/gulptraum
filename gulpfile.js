@@ -2,7 +2,6 @@
 
 const gulptraum = require('gulptraum');
 const gulptraumTypescriptPlugin = require('gulptraum-typescript');
-const tsconfig = require('tsconfig');
 
 const buildSystemConfig = {
 };
