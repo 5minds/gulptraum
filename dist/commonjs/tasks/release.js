@@ -34,7 +34,7 @@ function generate(gulp, config, gulptraum) {
 exports.command = {
     generate: generate,
     name: 'release',
-    help: 'Synchronises develop into master, bumps version and publishes to npm registry.',
+    help: 'Synchronises develop into master, bumps version and publishes to npm registry. Usage: gulp [--bumpMode=<patch|minor|major>:default=patch] [--devBranch=<nameOfDevelopmentBranch>:default=develop] [--prodBranch=<nameOfProductionBranch>:default=master] [--buildCommand=<commandToBuild>:default=\'gulp build\'] release',
 };
 
 //# sourceMappingURL=release.js.map
