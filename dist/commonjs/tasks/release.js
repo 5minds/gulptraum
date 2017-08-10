@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var path = require("path");
 var shell = require("gulp-shell");
-var yargs = require('yargs');
+var yargs = require("yargs");
 function generate(gulp, config, gulptraum) {
     gulp.task('release', function () {
         var releasePnpBuildCommand = ((config && config.releasePnpBuildCommand) || 'gulp build');

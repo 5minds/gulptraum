@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as shell from 'gulp-shell';
-const yargs = require('yargs');
+import * as yargs from 'yargs';
 
 function generate(gulp, config, gulptraum) {
 
