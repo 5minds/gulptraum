@@ -14,13 +14,13 @@ echo "SetupProdBranch: $PNP_PRODBRANCH"
 echo "BuidCommand: $PNP_BUILDCOMMAND"
 echo "BumpMode: $1"
 
-#If we are not in DEVBRANCH, we need to switch to it
-if [ -n "$currentBranch" -a "$currentBranch" != "$PNP_DEVBRANCH" ]; then
-	echo "switch back to $PNP_DEVBRANCH branch..."
-	git checkout $PNP_DEVBRANCH
-	echo "get actual code from $PNP_DEVBRANCH branch..."
-	git pull
-fi
+echo "switch to $PNP_DEVBRANCH to make sure it exists locally"
+git checkout $PNP_PRODBRANCH
+
+echo "switch back to $PNP_DEVBRANCH branch..."
+git checkout $PNP_DEVBRANCH
+echo "get actual code from $PNP_DEVBRANCH branch..."
+git pull
 
 if [ -n "$PNP_PRODBRANCH" ]; then
     echo "pull changes from $PNP_PRODBRANCH"
