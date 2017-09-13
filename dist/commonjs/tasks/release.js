@@ -5,7 +5,7 @@ var shell = require("gulp-shell");
 var yargs = require("yargs");
 function generate(gulp, config, gulptraum) {
     gulp.task('release', function () {
-        var releasePnpBuildCommand = ((config && config.releasePnpBuildCommand) || 'gulp build');
+        var releasePnpBuildCommand = ((config && config.releasePnpBuildCommand) || 'echo build-command not set');
         var releasePnpDevBranch = ((config && config.releasePnpDevBranch) || 'develop');
         var releasePnpProdBranch = ((config && config.releasePnpProdBranch) || 'master');
         var versioningMethod = '';
