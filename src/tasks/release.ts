@@ -6,7 +6,7 @@ function generate(gulp, config, gulptraum) {
 
   gulp.task('release', () => {
 
-    let releasePnpBuildCommand = ((config && config.releasePnpBuildCommand) || 'gulp build');
+    let releasePnpBuildCommand = ((config && config.releasePnpBuildCommand) || 'echo build-command not set');
     let releasePnpDevBranch = ((config && config.releasePnpDevBranch) || 'develop');
     let releasePnpProdBranch = ((config && config.releasePnpProdBranch) || 'master');
     let versioningMethod = '';
