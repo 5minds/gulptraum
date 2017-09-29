@@ -76,10 +76,6 @@ export class BuildSystem implements IBuildSystem {
 
           let name = packageManifest.name;
 
-          if (name[0] == '@') {
-            name = name.slice(1);
-          }
-
           config.packageName = name;
         }
       } catch (error) {

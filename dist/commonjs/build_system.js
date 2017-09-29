@@ -50,9 +50,6 @@ var BuildSystem = (function () {
                 var packageManifest = require(packageManifestPath);
                 if (packageManifest) {
                     var name_1 = packageManifest.name;
-                    if (name_1[0] == '@') {
-                        name_1 = name_1.slice(1);
-                    }
                     config.packageName = name_1;
                 }
             }
