@@ -74,7 +74,12 @@ export class BuildSystem implements IBuildSystem {
 
         if (packageManifest) {
 
+          config.fullPackageName = packageManifest.name;
           let name = packageManifest.name;
+          
+          if (name[0] == '@') {
+            name = name.slice(1);
+          }
 
           config.packageName = name;
         }

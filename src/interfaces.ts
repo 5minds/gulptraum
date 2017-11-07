@@ -44,6 +44,7 @@ export interface IGulptraumTypeScriptPluginConfiguration extends IPluginConfigur
 
 export interface IBuildSystemConfiguration<T extends IBuildSystemPathsConfiguration = IBuildSystemPathsConfiguration> {
   packageName?: string;
+  fullPackageName?: string;
   suppressErrors?: false,
   backupSetupFiles?: boolean;
   paths?: T,

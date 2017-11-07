@@ -49,7 +49,11 @@ var BuildSystem = (function () {
                 var packageManifestPath = path.resolve(config.paths.root + "/package.json");
                 var packageManifest = require(packageManifestPath);
                 if (packageManifest) {
+                    config.fullPackageName = packageManifest.name;
                     var name_1 = packageManifest.name;
+                    if (name_1[0] == '@') {
+                        name_1 = name_1.slice(1);
+                    }
                     config.packageName = name_1;
                 }
             }
