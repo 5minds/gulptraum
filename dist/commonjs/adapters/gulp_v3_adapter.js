@@ -37,7 +37,7 @@ var GulpV3Adapter = (function () {
         Array.prototype.push.apply(taskChain, buildTasks);
         this.gulp.task("" + taskName, function (callback) {
             var finishSequenceHandler = function (error) {
-                return _this._handleRunSequenceError(error, callback);
+                return _this._handleRunSequenceError(error, taskName, callback);
             };
             if (taskChain.length <= 0 || taskChain.some(function (task) {
                 return Array.isArray(task) && task.length === 0;
@@ -53,8 +53,9 @@ var GulpV3Adapter = (function () {
     GulpV3Adapter.prototype._handleEmptySequence = function (taskName) {
         console.log("No sub tasks found for top level task \"" + taskName + "\".");
     };
-    GulpV3Adapter.prototype._handleRunSequenceError = function (error, callback) {
-        if (this.gulptraum.config.suppressErrors) {
+    GulpV3Adapter.prototype._handleRunSequenceError = function (error, task, callback) {
+        var suppressErrorsForTask = this.gulptraum.config.suppressErrorsForTasks && this.gulptraum.config.suppressErrorsForTasks.indexOf(task) !== -1;
+        if (this.gulptraum.config.suppressErrors || suppressErrorsForTask) {
             return callback();
         }
         if (error) {

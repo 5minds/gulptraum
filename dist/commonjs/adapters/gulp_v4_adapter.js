@@ -41,7 +41,7 @@ var GulpV4Adapter = (function () {
                 return callback();
             };
             var finishSequenceHandler = function (error) {
-                return _this._handleRunSequenceError(error, callback);
+                return _this._handleRunSequenceError(error, taskName, callback);
             };
             if (taskChain.length > 0) {
                 callbackWrapper = finishSequenceHandler;
@@ -52,8 +52,9 @@ var GulpV4Adapter = (function () {
     GulpV4Adapter.prototype._handleEmptySequence = function (taskName) {
         console.log("No sub tasks found for top level task \"" + taskName + "\".");
     };
-    GulpV4Adapter.prototype._handleRunSequenceError = function (error, callback) {
-        if (this.gulptraum.config.suppressErrors) {
+    GulpV4Adapter.prototype._handleRunSequenceError = function (error, task, callback) {
+        var suppressErrorsForTask = this.gulptraum.config.suppressErrorsForTasks && this.gulptraum.config.suppressErrorsForTasks.indexOf(task) !== -1;
+        if (this.gulptraum.config.suppressErrors || suppressErrorsForTask) {
             return callback();
         }
         if (error) {

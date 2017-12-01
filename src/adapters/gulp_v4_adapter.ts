@@ -46,7 +46,7 @@ export class GulpV4Adapter implements IGulpVersionAdapter {
       };
 
       const finishSequenceHandler = (error) => {
-        return this._handleRunSequenceError(error, callback);
+        return this._handleRunSequenceError(error, taskName, callback);
       };
 
       if (taskChain.length > 0) {
@@ -61,9 +61,11 @@ export class GulpV4Adapter implements IGulpVersionAdapter {
     console.log(`No sub tasks found for top level task "${taskName}".`);
   }
   
-  private _handleRunSequenceError(error: Error, callback: Function): any {
+  private _handleRunSequenceError(error: Error, task: string, callback: Function): any {
 
-    if (this.gulptraum.config.suppressErrors) {
+    const suppressErrorsForTask = this.gulptraum.config.suppressErrorsForTasks && this.gulptraum.config.suppressErrorsForTasks.indexOf(task) !== -1;
+
+    if (this.gulptraum.config.suppressErrors || suppressErrorsForTask) {
       return callback();
     }
 
