@@ -75,7 +75,7 @@ var GulpV4Adapter = (function () {
         return this.gulp.task.apply(this.gulp, gulpTaskArgs);
     };
     GulpV4Adapter.prototype.getGulpTasks = function () {
-        return Object.keys(this.gulp.tasks);
+        return Object.keys(this.gulp.registry().tasks);
     };
     GulpV4Adapter.prototype.registerGulpTask = function (taskName, taskCallback) {
         var gulpTaskArgs = [

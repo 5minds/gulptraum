@@ -96,7 +96,7 @@ export class GulpV4Adapter implements IGulpVersionAdapter {
   }
 
   public getGulpTasks(): string[] {
-    return Object.keys(this.gulp.tasks);
+    return Object.keys(this.gulp.registry().tasks);
   }
 
   public registerGulpTask(taskName: string, taskCallback: Function): void {
