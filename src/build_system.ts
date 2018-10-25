@@ -4,12 +4,9 @@ import * as path from 'path';
 
 import * as merge from 'deepmerge';
 import * as groupBy from 'lodash.groupby';
-import * as flatten from 'lodash.flatten';
 import {DefaultBuildSystemConfig} from './index';
-import * as tasks from './tasks/index';
 import {exec} from 'child_process';
 
-import * as yargs from 'yargs';
 import * as vorpal from 'vorpal';
 import * as clone from 'clone';
 
@@ -53,9 +50,9 @@ export class BuildSystem implements IBuildSystem {
   }
 
   private _initializeGulpVersionAdapter(): void {
-    
+
     const isVersion3 = typeof Object.getPrototypeOf(this.gulp).run !== 'undefined';
-    
+
     if (isVersion3) {
       this.gulpAdapter = new GulpV3Adapter(this.gulp, this);
     } else {
@@ -64,9 +61,9 @@ export class BuildSystem implements IBuildSystem {
   }
 
   private _validateBuildSystemConfig(config: IBuildSystemConfiguration): void {
-    
+
     if (!config.packageName) {
-      
+
       try {
 
         const packageManifestPath = path.resolve(`${config.paths.root}/package.json`);
@@ -76,7 +73,7 @@ export class BuildSystem implements IBuildSystem {
 
           config.fullPackageName = packageManifest.name;
           let name = packageManifest.name;
-          
+
           if (name[0] == '@') {
             name = name.slice(1);
           }
@@ -92,7 +89,7 @@ export class BuildSystem implements IBuildSystem {
   public registerTasks(externalGulp?: any): void {
 
     this.gulp = externalGulp || gulp; //eslint-disable-line
-    
+
     this._initializeGulpVersionAdapter();
 
     this.config = this._mergeConfigs(DefaultBuildSystemConfig, this.config);
