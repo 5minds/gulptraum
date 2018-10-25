@@ -1,12 +1,13 @@
 import {IGulpVersionAdapter} from './../index';
 import * as runSequence from 'run-sequence';
+import {Gulp} from 'gulp';
 
 export class GulpV4Adapter implements IGulpVersionAdapter {
-  
-  private _gulpInstance: any;
+
+  private _gulpInstance: Gulp;
   private _gulptraumInstance: any;
-  
-  public get gulp(): any {
+
+  public get gulp(): Gulp {
     return this._gulpInstance;
   }
 
@@ -14,16 +15,16 @@ export class GulpV4Adapter implements IGulpVersionAdapter {
     return this._gulptraumInstance;
   }
 
-  constructor(gulpInstance: any, gulptraumInstance: any) {
+  constructor(gulpInstance: Gulp, gulptraumInstance: any) {
     this._gulpInstance = gulpInstance;
     this._gulptraumInstance = gulptraumInstance;
   }
-  
+
   public isTaskRegistered(taskName: string): boolean {
     const tasks = this.getGulpTasks();
     return tasks.indexOf(taskName) >= 0;
   }
-  
+
   public runTasksSequential(tasks, callback): any {
     const args = tasks.concat(callback);
     return runSequence.use(this.gulp)(...args);
@@ -52,15 +53,15 @@ export class GulpV4Adapter implements IGulpVersionAdapter {
       if (taskChain.length > 0) {
         callbackWrapper = finishSequenceHandler;
       }
-      
+
       this.gulptraum.gulpAdapter.runTasksSequential(taskChain, callbackWrapper);
     });
   }
-  
+
   private _handleEmptySequence(taskName: string): void {
     console.log(`No sub tasks found for top level task "${taskName}".`);
   }
-  
+
   private _handleRunSequenceError(error: Error, task: string, callback: Function): any {
 
     const suppressErrorsForTask = this.gulptraum.config.suppressErrorsForTasks && this.gulptraum.config.suppressErrorsForTasks.indexOf(task) !== -1;
@@ -93,13 +94,13 @@ export class GulpV4Adapter implements IGulpVersionAdapter {
 
     return this.gulp.task.apply(this.gulp, gulpTaskArgs);
   }
-  
+
   public getGulpTasks(): string[] {
     return Object.keys(this.gulp.tasks);
   }
-  
+
   public registerGulpTask(taskName: string, taskCallback: Function): void {
-    
+
     const gulpTaskArgs = [
       taskName,
       taskCallback

@@ -37,6 +37,7 @@
   },
   "homepage": "https://github.com/5minds/gulptraum#readme",
   "devDependencies": {
+    "@types/gulp": "4.0.5",
     "@types/node": "10.12.0",
     "eslint": "5.7.0",
     "eslint-config-5minds": "0.2.1",
