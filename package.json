@@ -42,7 +42,6 @@
     "eslint-config-5minds": "0.2.1",
     "eslint-plugin-import": "2.14.0",
     "gulp": "4.0.0",
-    "gulptraum-typescript": "git://github.com/5minds/gulptraum-typescript.git#feature/upgrade_gulp",
     "tsconfig": "7.0.0",
     "tslint-config-5minds": "1.0.6"
   },
@@ -51,7 +50,6 @@
     "gulp-bump": "3.1.1",
     "gulp-conventional-changelog": "2.0.3",
     "gulp-shell": "0.6.5",
-    "lodash.flatten": "4.4.0",
     "lodash.groupby": "4.6.0",
     "run-sequence": "2.2.1",
     "vorpal": "1.12.0",
