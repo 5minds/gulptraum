@@ -16,17 +16,22 @@ function sortTaskNames(taskNames) {
 function generate(gulp, config, gulptraum) {
     gulp.task('tasks', function () {
         var taskNames = Object.keys(gulp.tasks);
-        var groupedPluginKeys = groupBy(taskNames, function (taskName) {
-            var topLevelTaskName = null;
-            if (taskName.indexOf('-') > 0) {
-                var taskNameSegments = taskName.split('-');
-                topLevelTaskName = taskNameSegments[0];
-            }
-            else {
-                topLevelTaskName = taskName;
-            }
-            return topLevelTaskName;
-        });
+        const groupedPluginKeys = {};
+        for (const taskName of taskNames) {
+          let topLevelTaskName = null;
+          if (taskName.indexOf('-') > 0) {
+            const taskNameSegments = taskName.split('-');
+            topLevelTaskName = taskNameSegments[0];
+          } else {
+            topLevelTaskName = taskName;
+          }
+          const groupHasMatchingKey = groupedPluginKeys[topLevelTaskName] !== undefined;
+          if (groupHasMatchingKey) {
+            groupedPluginKeys[topLevelTaskName].push(taskName);
+          } else {
+            groupedPluginKeys[topLevelTaskName] = [taskName];
+          }
+        }
         var groupKeys = Object.keys(groupedPluginKeys);
         groupKeys.forEach(function (groupKey) {
             var groupTasks = groupedPluginKeys[groupKey];

@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var path = require("path");
 var merge = require("deepmerge");
-var groupBy = require("lodash.groupby");
 var index_1 = require("./index");
 var child_process_1 = require("child_process");
 var vorpal = require("vorpal");
@@ -220,13 +219,18 @@ var BuildSystem = (function () {
         return this.config.conventionalTasks[taskName].help;
     };
     BuildSystem.prototype._getPluginKeysGroupedByPriority = function () {
-        var _this = this;
-        var allPluginKeys = this._getPluginKeys();
-        var groupedPluginKeys = groupBy(allPluginKeys, function (key) {
-            var config = _this._getPluginConfig(key);
-            return config.priority;
-        });
-        return groupedPluginKeys;
+      const allPluginKeys = this._getPluginKeys();
+      const groupedPluginKeys = {};
+      for (const pluginkey of allPluginKeys) {
+        const config = this._getPluginConfig(pluginkey);
+        const groupHasMatchingEntry = groupedPluginKeys[config.priority] !== undefined;
+        if (groupHasMatchingEntry) {
+          groupedPluginKeys[config.priority].push(pluginkey);
+        } else {
+          groupedPluginKeys[config.priority] = [pluginkey];
+        }
+      }
+      return groupedPluginKeys;
     };
     BuildSystem.prototype._getPluginKeys = function () {
         return Object.keys(this.pluginConfigs);

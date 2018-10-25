@@ -3,7 +3,6 @@
 import * as path from 'path';
 
 import * as merge from 'deepmerge';
-import * as groupBy from 'lodash.groupby';
 import {DefaultBuildSystemConfig} from './index';
 import {exec} from 'child_process';
 
@@ -321,12 +320,20 @@ export class BuildSystem implements IBuildSystem {
 
     const allPluginKeys = this._getPluginKeys();
 
-    const groupedPluginKeys = groupBy(allPluginKeys, (key) => {
+    const groupedPluginKeys: IGroupedPluginKeys = {};
 
-      const config = this._getPluginConfig(key);
+    for (const pluginkey of allPluginKeys) {
 
-      return config.priority;
-    });
+      const config = this._getPluginConfig(pluginkey);
+
+      const groupHasMatchingEntry: boolean = groupedPluginKeys[config.priority] !== undefined;
+      if (groupHasMatchingEntry) {
+        groupedPluginKeys[config.priority].push(pluginkey);
+      } else {
+        groupedPluginKeys[config.priority] = [pluginkey];
+      }
+
+    }
 
     return groupedPluginKeys;
   }
