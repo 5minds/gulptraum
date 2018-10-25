@@ -102,6 +102,7 @@ var BuildSystem = (function () {
     BuildSystem.prototype._initializePlugin = function (name) {
         var plugin = this._getPlugin(name);
         var configUsed = this._getResolvedPluginConfig(name);
+        console.log('INIT PLUGIN ', plugin);
         plugin.initializePlugin(this.gulp, configUsed, this);
     };
     BuildSystem.prototype._registerTasksBeforePlugins = function () {

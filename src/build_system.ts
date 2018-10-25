@@ -49,6 +49,25 @@ export class BuildSystem implements IBuildSystem {
     this.cli = vorpal();
   }
 
+  public registerTasks(externalGulp?: any): void {
+
+    this.gulp = externalGulp || gulp; //eslint-disable-line
+
+    this._initializeGulpVersionAdapter();
+
+    this.config = this._mergeConfigs(DefaultBuildSystemConfig, this.config);
+
+    this._validateBuildSystemConfig(this.config);
+
+    this._registerTasksBeforePlugins();
+
+    this._initializePlugins();
+
+    this._registerTasksAfterPlugins();
+
+    this._registerSystemTasks();
+  }
+
   private _initializeGulpVersionAdapter(): void {
 
     const isVersion3 = typeof Object.getPrototypeOf(this.gulp).run !== 'undefined';
@@ -86,26 +105,11 @@ export class BuildSystem implements IBuildSystem {
     }
   }
 
-  public registerTasks(externalGulp?: any): void {
+  private _registerTasksBeforePlugins(): void {
 
-    this.gulp = externalGulp || gulp; //eslint-disable-line
-
-    this._initializeGulpVersionAdapter();
-
-    this.config = this._mergeConfigs(DefaultBuildSystemConfig, this.config);
-
-    this._validateBuildSystemConfig(this.config);
-
-    this._registerTasksBeforePlugins();
-
-    this._initializePlugins();
-
-    this._registerTasksAfterPlugins();
-
-    this._registerSystemTasks();
   }
 
-  _registerSystemTasks() {
+  private _registerSystemTasks(): void {
 
     const systemTasks = this._getSystemTasks();
 
@@ -114,7 +118,7 @@ export class BuildSystem implements IBuildSystem {
     });
   }
 
-  _registerSystemTask(taskName) {
+  private _registerSystemTask(taskName): void {
     const task = this._getSystemTask(taskName);
 
     if (!task.excludeTaskFromCli) {
@@ -124,39 +128,34 @@ export class BuildSystem implements IBuildSystem {
     task.generate(this.gulp, this.config, this);
   }
 
-  _getSystemTasks() {
+  private _getSystemTasks(): Array<string> {
     return Object.keys(systemTasks);
   }
 
-  _getSystemTask(taskName) {
+  private _getSystemTask(taskName): any {
     return systemTasks[taskName];
   }
 
-  _initializePlugins() {
+  private _initializePlugins(): void {
 
     const pluginsToInitialize = this._getPluginKeysOrderedByPriority();
 
     pluginsToInitialize.forEach((plugin) => {
-
       this._initializePlugin(plugin);
     });
   }
 
-  _initializePlugin(name) {
+  private _initializePlugin(name): void {
     const plugin = this._getPlugin(name);
     const configUsed = this._getResolvedPluginConfig(name);
     plugin.initializePlugin(this.gulp, configUsed, this);
   }
 
-  _registerTasksBeforePlugins() {
-
-  }
-
-  _registerTasksAfterPlugins() {
+  private _registerTasksAfterPlugins(): void {
     this._registerConventionalTasks();
   }
 
-  _registerConventionalTasks() {
+  private _registerConventionalTasks(): void {
     const conventionalTasks = Object.keys(this.config.conventionalTasks);
 
     conventionalTasks.forEach((conventionalTask) => {

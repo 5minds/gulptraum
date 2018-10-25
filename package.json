@@ -42,6 +42,7 @@
     "eslint": "5.7.0",
     "eslint-config-5minds": "0.2.1",
     "eslint-plugin-import": "2.14.0",
+    "gulp": "git://github.com/5minds/gulp.git#feature/fix_vulnerabilities",
     "gulptraum": "git://github.com/5minds/gulptraum.git#feature/upgrade_gulp",
     "gulptraum-typescript": "git://github.com/5minds/gulptraum-typescript.git#feature/upgrade_gulp",
     "tsconfig": "7.0.0",
@@ -49,7 +50,7 @@
   },
   "dependencies": {
     "deepmerge": "2.2.1",
-    "gulp": "3.9.1",
+    "gulp": "4.0.0",
     "gulp-bump": "3.1.1",
     "gulp-conventional-changelog": "2.0.3",
     "gulp-shell": "0.6.5",

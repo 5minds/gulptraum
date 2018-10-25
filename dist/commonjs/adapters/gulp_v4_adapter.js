@@ -26,9 +26,12 @@ var GulpV4Adapter = (function () {
     };
     GulpV4Adapter.prototype.runTasksSequential = function (tasks, callback) {
         var args = tasks.concat(callback);
+        console.log(args);
+        this.gulp.hasTask = () => true;
         return runSequence.use(this.gulp).apply(void 0, args);
     };
     GulpV4Adapter.prototype.runTasksParallel = function (tasks, callback) {
+        console.log(tasks);
         return runSequence.use(this.gulp)(tasks, callback);
     };
     GulpV4Adapter.prototype.registerConventionalTask = function (taskName, taskConfig, buildTasks) {
