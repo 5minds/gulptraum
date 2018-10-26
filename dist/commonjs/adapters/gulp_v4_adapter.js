@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var runSequence = require("run-sequence");
 var GulpV4Adapter = (function () {
     function GulpV4Adapter(gulpInstance, gulptraumInstance) {
         this._gulpInstance = gulpInstance;
@@ -22,17 +21,28 @@ var GulpV4Adapter = (function () {
     });
     GulpV4Adapter.prototype.isTaskRegistered = function (taskName) {
         var tasks = this.getGulpTasks();
+        console.log('GET GULP TASKS', tasks);
         return tasks.indexOf(taskName) >= 0;
     };
     GulpV4Adapter.prototype.runTasksSequential = function (tasks, callback) {
-        var args = tasks.concat(callback);
-        console.log(args);
-        this.gulp.hasTask = () => true;
-        return runSequence.use(this.gulp).apply(void 0, args);
+      console.log(tasks);
+      const filteredTasks = this._filterEmptyTasks(tasks);
+      console.log(filteredTasks);
+      if (filteredTasks.length === 0) {
+        return callback();
+      }
+      const sequenceFunc = this.gulp.series(filteredTasks);
+      return sequenceFunc(callback);
     };
     GulpV4Adapter.prototype.runTasksParallel = function (tasks, callback) {
-        console.log(tasks);
-        return runSequence.use(this.gulp)(tasks, callback);
+      console.log(tasks);
+      const filteredEmptyTasks = this._filterEmptyTasks(tasks);
+      console.log(filteredEmptyTasks);
+      if (filteredTasks.length === 0) {
+        return callback();
+      }
+      const parallelFunc = this.gulp.parallel(filteredEmptyTasks);
+      return parallelFunc(callback);
     };
     GulpV4Adapter.prototype.registerConventionalTask = function (taskName, taskConfig, buildTasks) {
         var _this = this;
@@ -70,22 +80,27 @@ var GulpV4Adapter = (function () {
             return callback();
         }
     };
-    GulpV4Adapter.prototype.runTask = function (taskName, taskCallback) {
-        var gulpTaskArgs = [
-            taskName,
-            taskCallback
-        ];
-        return this.gulp.task.apply(this.gulp, gulpTaskArgs);
-    };
     GulpV4Adapter.prototype.getGulpTasks = function () {
-        return Object.keys(this.gulp.registry().tasks);
+        console.log(this.gulp.registry().tasks());
+        return Object.keys(this.gulp.registry().tasks());
     };
     GulpV4Adapter.prototype.registerGulpTask = function (taskName, taskCallback) {
-        var gulpTaskArgs = [
-            taskName,
-            taskCallback
-        ];
-        return this.gulp.task.apply(this.gulp, gulpTaskArgs);
+        console.log('REGISTER V4 GULP TASK');
+        console.log(taskName);
+        console.log(taskCallback);
+        return this.gulp.task(taskName, taskCallback);
+    };
+    GulpV4Adapter.prototype.runTask = function (taskName, taskCallback) {
+      throw new Error('Cannot use runTask with gulp v4. Use registerGulpTask instead.');
+    };
+    GulpV4Adapter.prototype._filterEmptyTasks = function (tasks) {
+      const filteredTasks = tasks.filter((task) => {
+        if (Array.isArray(task)) {
+          return task.length > 0;
+        }
+        return task !== undefined;
+      });
+      return filteredTasks;
     };
     return GulpV4Adapter;
 }());

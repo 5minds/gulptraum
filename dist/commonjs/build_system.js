@@ -157,9 +157,13 @@ var BuildSystem = (function () {
         return tasksRegistered;
     };
     BuildSystem.prototype.task = function (taskName, config, taskCallback) {
+        console.log('REGISTER TASK');
+        console.log(taskName);
+        console.log(config);
+        console.log(taskCallback);
         var help = config.help || 'no help provided';
         this._registerTaskToCli(taskName, help);
-        return this.gulpAdapter.runTask(taskName, taskCallback);
+        return this.gulpAdapter.registerGulpTask(taskName, taskCallback);
     };
     BuildSystem.prototype._registerTaskToCli = function (taskName, help) {
         var _this = this;

@@ -231,7 +231,7 @@ export class BuildSystem implements IBuildSystem {
 
     this._registerTaskToCli(taskName, help);
 
-    return this.gulpAdapter.runTask(taskName, taskCallback);
+    return this.gulpAdapter.registerGulpTask(taskName, taskCallback);
   }
 
   private _registerTaskToCli(taskName: string, help: string): void {
@@ -240,14 +240,6 @@ export class BuildSystem implements IBuildSystem {
       .action((args, callback) => {
         return this._runTaskFromCli(taskName, args, callback);
       });
-  }
-
-  private _ensureTaskIsRegisteredToCli(taskName: string): void {
-    const isTaskRegisteredToCli = this.cli.find(taskName);
-
-    if (!isTaskRegisteredToCli) {
-      throw new Error('Task "${taskName}" is not registered.');
-    }
   }
 
   private _runTaskFromCli(taskName: string, args: ICliTaskArguments, callback: Function): void {
@@ -301,19 +293,15 @@ export class BuildSystem implements IBuildSystem {
     this.gulpAdapter.registerConventionalTask(taskName, taskConfig, buildTasks);
   }
 
-  private _getConventionalTaskConfig(taskName: string): IConventionalTaskConfiguration {
-    return this.config.conventionalTasks[taskName];
-  }
-
   private _getHelpForConventionalTask(taskName: string): string {
 
     const taskConfig = this._getConventionalTaskConfig(taskName);
 
-    if (!taskConfig) {
-      return 'help not found';
-    }
+    return taskConfig.help || 'help not found';
+  }
 
-    return this.config.conventionalTasks[taskName].help;
+  private _getConventionalTaskConfig(taskName: string): IConventionalTaskConfiguration {
+    return this.config.conventionalTasks[taskName];
   }
 
   private _getPluginKeysGroupedByPriority(): IGroupedPluginKeys {

@@ -1,6 +1,6 @@
 import {IGulpVersionAdapter} from './../index';
-import * as runSequence from 'run-sequence';
 import {Gulp} from 'gulp';
+import * as Undertaker from 'undertaker';
 
 export class GulpV4Adapter implements IGulpVersionAdapter {
 
@@ -25,13 +25,16 @@ export class GulpV4Adapter implements IGulpVersionAdapter {
     return tasks.indexOf(taskName) >= 0;
   }
 
-  public runTasksSequential(tasks, callback): any {
-    const args = tasks.concat(callback);
-    return runSequence.use(this.gulp)(...args);
+  public runTasksSequential(tasks: Array<any>, callback): any {
+    const filteredEmptyTasks: Array<any> = this._filterEmptyTasks(tasks);
+    const sequenceFunc: Undertaker.TaskFunction = this.gulp.series(filteredEmptyTasks);
+    return sequenceFunc(callback);
   }
 
-  public runTasksParallel(tasks: Array<string>, callback): any {
-    return runSequence.use(this.gulp)(tasks, callback);
+  public runTasksParallel(tasks: Array<any>, callback): any {
+    const filteredEmptyTasks: Array<any> = this._filterEmptyTasks(tasks);
+    const parallelFunc: Undertaker.TaskFunction = this.gulp.parallel(filteredEmptyTasks);
+    return parallelFunc(callback);
   }
 
   public registerConventionalTask(taskName: string, taskConfig: any, buildTasks: Array<Array<string>>): void {
@@ -85,28 +88,34 @@ export class GulpV4Adapter implements IGulpVersionAdapter {
     }
   }
 
-  public runTask(taskName: string, taskCallback: Function): void {
-
-    const gulpTaskArgs = [
-      taskName,
-      taskCallback
-    ];
-
-    return this.gulp.task.apply(this.gulp, gulpTaskArgs);
+  public registerGulpTask(taskName: string, taskCallback: any): void {
+    return this.gulp.task(taskName, taskCallback);
   }
 
   public getGulpTasks(): string[] {
-    return Object.keys(this.gulp.registry().tasks);
+
+    const tasks = this.gulp
+      .registry()
+      .tasks();
+
+    return Object.keys(tasks);
   }
 
-  public registerGulpTask(taskName: string, taskCallback: Function): void {
+  public runTask(taskName: string, taskCallback: Function): void {
+    throw new Error('Cannot use runTask with gulp v4. Use registerGulpTask instead.');
+  }
 
-    const gulpTaskArgs = [
-      taskName,
-      taskCallback
-    ];
+  private _filterEmptyTasks(tasks: Array<any>): Array<any> {
 
-    return this.gulp.task.apply(this.gulp, gulpTaskArgs);
+    const filteredTasks = tasks.filter((task) => {
+
+      if (Array.isArray(task)) {
+        return task.length > 0;
+      }
+
+      return task !== undefined;
+    });
+    return filteredTasks;
   }
 
 }
