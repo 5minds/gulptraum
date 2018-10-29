@@ -26,14 +26,24 @@ export class GulpV4Adapter implements IGulpVersionAdapter {
   }
 
   public runTasksSequential(tasks: Array<any>, callback): any {
-    const filteredEmptyTasks: Array<any> = this._filterEmptyTasks(tasks);
-    const sequenceFunc: Undertaker.TaskFunction = this.gulp.series(filteredEmptyTasks);
+
+    const filteredTasks: Array<any> = this._filterEmptyTasks(tasks);
+
+    if (filteredTasks.length === 0) {
+      return callback();
+    }
+    const sequenceFunc: Undertaker.TaskFunction = this.gulp.series(filteredTasks);
     return sequenceFunc(callback);
   }
 
   public runTasksParallel(tasks: Array<any>, callback): any {
-    const filteredEmptyTasks: Array<any> = this._filterEmptyTasks(tasks);
-    const parallelFunc: Undertaker.TaskFunction = this.gulp.parallel(filteredEmptyTasks);
+
+    const filteredTasks: Array<any> = this._filterEmptyTasks(tasks);
+
+    if (filteredTasks.length === 0) {
+      return callback();
+    }
+    const parallelFunc: Undertaker.TaskFunction = this.gulp.parallel(filteredTasks);
     return parallelFunc(callback);
   }
 
@@ -102,7 +112,7 @@ export class GulpV4Adapter implements IGulpVersionAdapter {
   }
 
   public runTask(taskName: string, taskCallback: Function): void {
-    throw new Error('Cannot use runTask with gulp v4. Use registerGulpTask instead.');
+    throw new Error('Cannot use runTask with gulp v4. Use "registerGulpTask" and then "runTasksSequential" or "runTasksParallel" instead.');
   }
 
   private _filterEmptyTasks(tasks: Array<any>): Array<any> {

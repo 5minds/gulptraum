@@ -21,13 +21,12 @@ var GulpV4Adapter = (function () {
     });
     GulpV4Adapter.prototype.isTaskRegistered = function (taskName) {
         var tasks = this.getGulpTasks();
-        console.log('GET GULP TASKS', tasks);
         return tasks.indexOf(taskName) >= 0;
     };
     GulpV4Adapter.prototype.runTasksSequential = function (tasks, callback) {
-      console.log(tasks);
+
       const filteredTasks = this._filterEmptyTasks(tasks);
-      console.log(filteredTasks);
+
       if (filteredTasks.length === 0) {
         return callback();
       }
@@ -35,13 +34,13 @@ var GulpV4Adapter = (function () {
       return sequenceFunc(callback);
     };
     GulpV4Adapter.prototype.runTasksParallel = function (tasks, callback) {
-      console.log(tasks);
-      const filteredEmptyTasks = this._filterEmptyTasks(tasks);
-      console.log(filteredEmptyTasks);
+
+      const filteredTasks = this._filterEmptyTasks(tasks);
+
       if (filteredTasks.length === 0) {
         return callback();
       }
-      const parallelFunc = this.gulp.parallel(filteredEmptyTasks);
+      const parallelFunc = this.gulp.parallel(filteredTasks);
       return parallelFunc(callback);
     };
     GulpV4Adapter.prototype.registerConventionalTask = function (taskName, taskConfig, buildTasks) {
@@ -63,7 +62,7 @@ var GulpV4Adapter = (function () {
         });
     };
     GulpV4Adapter.prototype._handleEmptySequence = function (taskName) {
-        console.log("No sub tasks found for top level task \"" + taskName + "\".");
+
     };
     GulpV4Adapter.prototype._handleRunSequenceError = function (error, task, callback) {
         var suppressErrorsForTask = this.gulptraum.config.suppressErrorsForTasks && this.gulptraum.config.suppressErrorsForTasks.indexOf(task) !== -1;
@@ -72,8 +71,8 @@ var GulpV4Adapter = (function () {
         }
         if (error) {
             var exitCode = 2;
-            console.log('[ERROR] gulp build task failed', error);
-            console.log('[FAIL] gulp build task failed - exiting with code ' + exitCode);
+
+
             return process.exit(exitCode);
         }
         else {
@@ -81,13 +80,13 @@ var GulpV4Adapter = (function () {
         }
     };
     GulpV4Adapter.prototype.getGulpTasks = function () {
-        console.log(this.gulp.registry().tasks());
+
         return Object.keys(this.gulp.registry().tasks());
     };
     GulpV4Adapter.prototype.registerGulpTask = function (taskName, taskCallback) {
-        console.log('REGISTER V4 GULP TASK');
-        console.log(taskName);
-        console.log(taskCallback);
+
+
+
         return this.gulp.task(taskName, taskCallback);
     };
     GulpV4Adapter.prototype.runTask = function (taskName, taskCallback) {

@@ -57,7 +57,7 @@ var BuildSystem = (function () {
                 }
             }
             catch (error) {
-                console.log(error);
+
             }
         }
     };
@@ -101,7 +101,7 @@ var BuildSystem = (function () {
     BuildSystem.prototype._initializePlugin = function (name) {
         var plugin = this._getPlugin(name);
         var configUsed = this._getResolvedPluginConfig(name);
-        console.log('INIT PLUGIN ', plugin);
+
         plugin.initializePlugin(this.gulp, configUsed, this);
     };
     BuildSystem.prototype._registerTasksBeforePlugins = function () {
@@ -157,10 +157,6 @@ var BuildSystem = (function () {
         return tasksRegistered;
     };
     BuildSystem.prototype.task = function (taskName, config, taskCallback) {
-        console.log('REGISTER TASK');
-        console.log(taskName);
-        console.log(config);
-        console.log(taskCallback);
         var help = config.help || 'no help provided';
         this._registerTaskToCli(taskName, help);
         return this.gulpAdapter.registerGulpTask(taskName, taskCallback);
@@ -194,7 +190,6 @@ var BuildSystem = (function () {
     };
     BuildSystem.prototype._runCommandInChildProcess = function (command, callback) {
         var commandCallback = function (error, stdout, stderr) {
-            console.log(stdout);
             callback();
         };
         var execOptions = {

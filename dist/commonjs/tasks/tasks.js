@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var groupBy = require("lodash.groupby");
 function sortTaskNames(taskNames) {
     var taskNamesSorted = taskNames.sort(function (nameA, nameB) {
         if (nameA < nameB) {
