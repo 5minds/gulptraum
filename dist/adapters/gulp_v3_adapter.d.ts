@@ -9,8 +9,8 @@ export declare class GulpV3Adapter implements IGulpVersionAdapter {
     runTasksSequential(tasks: any, callback: any): any;
     runTasksParallel(tasks: Array<string>, callback: any): any;
     registerConventionalTask(taskName: string, taskConfig: any, buildTasks: Array<Array<string>>): void;
-    private _handleEmptySequence(taskName);
-    private _handleRunSequenceError(error, task, callback);
+    private _handleEmptySequence;
+    private _handleRunSequenceError;
     runTask(taskName: string, taskCallback: Function): void;
     getGulpTasks(): string[];
     registerGulpTask(taskName: string, taskCallback: Function): void;

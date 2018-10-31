@@ -1,12 +1,13 @@
 import {IGulpVersionAdapter} from './../index';
-import * as runSequence from 'run-sequence';
+import {Gulp} from 'gulp';
+import * as Undertaker from 'undertaker';
 
 export class GulpV4Adapter implements IGulpVersionAdapter {
-  
-  private _gulpInstance: any;
+
+  private _gulpInstance: Gulp;
   private _gulptraumInstance: any;
-  
-  public get gulp(): any {
+
+  public get gulp(): Gulp {
     return this._gulpInstance;
   }
 
@@ -14,23 +15,36 @@ export class GulpV4Adapter implements IGulpVersionAdapter {
     return this._gulptraumInstance;
   }
 
-  constructor(gulpInstance: any, gulptraumInstance: any) {
+  constructor(gulpInstance: Gulp, gulptraumInstance: any) {
     this._gulpInstance = gulpInstance;
     this._gulptraumInstance = gulptraumInstance;
   }
-  
+
   public isTaskRegistered(taskName: string): boolean {
     const tasks = this.getGulpTasks();
     return tasks.indexOf(taskName) >= 0;
   }
-  
-  public runTasksSequential(tasks, callback): any {
-    const args = tasks.concat(callback);
-    return runSequence.use(this.gulp)(...args);
+
+  public runTasksSequential(tasks: Array<any>, callback): any {
+
+    const filteredTasks: Array<any> = this._filterEmptyTasks(tasks);
+
+    if (filteredTasks.length === 0) {
+      return callback();
+    }
+    const sequenceFunc: Undertaker.TaskFunction = this.gulp.series(filteredTasks);
+    return sequenceFunc(callback);
   }
 
-  public runTasksParallel(tasks: Array<string>, callback): any {
-    return runSequence.use(this.gulp)(tasks, callback);
+  public runTasksParallel(tasks: Array<any>, callback): any {
+
+    const filteredTasks: Array<any> = this._filterEmptyTasks(tasks);
+
+    if (filteredTasks.length === 0) {
+      return callback();
+    }
+    const parallelFunc: Undertaker.TaskFunction = this.gulp.parallel(filteredTasks);
+    return parallelFunc(callback);
   }
 
   public registerConventionalTask(taskName: string, taskConfig: any, buildTasks: Array<Array<string>>): void {
@@ -52,15 +66,15 @@ export class GulpV4Adapter implements IGulpVersionAdapter {
       if (taskChain.length > 0) {
         callbackWrapper = finishSequenceHandler;
       }
-      
+
       this.gulptraum.gulpAdapter.runTasksSequential(taskChain, callbackWrapper);
     });
   }
-  
+
   private _handleEmptySequence(taskName: string): void {
     console.log(`No sub tasks found for top level task "${taskName}".`);
   }
-  
+
   private _handleRunSequenceError(error: Error, task: string, callback: Function): any {
 
     const suppressErrorsForTask = this.gulptraum.config.suppressErrorsForTasks && this.gulptraum.config.suppressErrorsForTasks.indexOf(task) !== -1;
@@ -84,28 +98,34 @@ export class GulpV4Adapter implements IGulpVersionAdapter {
     }
   }
 
-  public runTask(taskName: string, taskCallback: Function): void {
-
-    const gulpTaskArgs = [
-      taskName,
-      taskCallback
-    ];
-
-    return this.gulp.task.apply(this.gulp, gulpTaskArgs);
+  public registerGulpTask(taskName: string, taskCallback: any): void {
+    return this.gulp.task(taskName, taskCallback);
   }
-  
+
   public getGulpTasks(): string[] {
-    return Object.keys(this.gulp.tasks);
-  }
-  
-  public registerGulpTask(taskName: string, taskCallback: Function): void {
-    
-    const gulpTaskArgs = [
-      taskName,
-      taskCallback
-    ];
 
-    return this.gulp.task.apply(this.gulp, gulpTaskArgs);
+    const tasks = this.gulp
+      .registry()
+      .tasks();
+
+    return Object.keys(tasks);
+  }
+
+  public runTask(taskName: string, taskCallback: Function): void {
+    throw new Error('Cannot use runTask with gulp v4. Use "registerGulpTask" and then "runTasksSequential" or "runTasksParallel" instead.');
+  }
+
+  private _filterEmptyTasks(tasks: Array<any>): Array<any> {
+
+    const filteredTasks = tasks.filter((task) => {
+
+      if (Array.isArray(task)) {
+        return task.length > 0;
+      }
+
+      return task !== undefined;
+    });
+    return filteredTasks;
   }
 
 }

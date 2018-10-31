@@ -3,13 +3,9 @@
 import * as path from 'path';
 
 import * as merge from 'deepmerge';
-import * as groupBy from 'lodash.groupby';
-import * as flatten from 'lodash.flatten';
 import {DefaultBuildSystemConfig} from './index';
-import * as tasks from './tasks/index';
 import {exec} from 'child_process';
 
-import * as yargs from 'yargs';
 import * as vorpal from 'vorpal';
 import * as clone from 'clone';
 
@@ -52,47 +48,10 @@ export class BuildSystem implements IBuildSystem {
     this.cli = vorpal();
   }
 
-  private _initializeGulpVersionAdapter(): void {
-    
-    const isVersion3 = typeof Object.getPrototypeOf(this.gulp).run !== 'undefined';
-    
-    if (isVersion3) {
-      this.gulpAdapter = new GulpV3Adapter(this.gulp, this);
-    } else {
-      this.gulpAdapter = new GulpV4Adapter(this.gulp, this);
-    }
-  }
-
-  private _validateBuildSystemConfig(config: IBuildSystemConfiguration): void {
-    
-    if (!config.packageName) {
-      
-      try {
-
-        const packageManifestPath = path.resolve(`${config.paths.root}/package.json`);
-        const packageManifest = require(packageManifestPath);
-
-        if (packageManifest) {
-
-          config.fullPackageName = packageManifest.name;
-          let name = packageManifest.name;
-          
-          if (name[0] == '@') {
-            name = name.slice(1);
-          }
-
-          config.packageName = name;
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  }
-
   public registerTasks(externalGulp?: any): void {
 
     this.gulp = externalGulp || gulp; //eslint-disable-line
-    
+
     this._initializeGulpVersionAdapter();
 
     this.config = this._mergeConfigs(DefaultBuildSystemConfig, this.config);
@@ -108,7 +67,48 @@ export class BuildSystem implements IBuildSystem {
     this._registerSystemTasks();
   }
 
-  _registerSystemTasks() {
+  private _initializeGulpVersionAdapter(): void {
+
+    const isVersion3 = typeof Object.getPrototypeOf(this.gulp).run !== 'undefined';
+
+    if (isVersion3) {
+      this.gulpAdapter = new GulpV3Adapter(this.gulp, this);
+    } else {
+      this.gulpAdapter = new GulpV4Adapter(this.gulp, this);
+    }
+  }
+
+  private _validateBuildSystemConfig(config: IBuildSystemConfiguration): void {
+
+    if (!config.packageName) {
+
+      try {
+
+        const packageManifestPath = path.resolve(`${config.paths.root}/package.json`);
+        const packageManifest = require(packageManifestPath);
+
+        if (packageManifest) {
+
+          config.fullPackageName = packageManifest.name;
+          let name = packageManifest.name;
+
+          if (name[0] == '@') {
+            name = name.slice(1);
+          }
+
+          config.packageName = name;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+
+  private _registerTasksBeforePlugins(): void {
+
+  }
+
+  private _registerSystemTasks(): void {
 
     const systemTasks = this._getSystemTasks();
 
@@ -117,7 +117,7 @@ export class BuildSystem implements IBuildSystem {
     });
   }
 
-  _registerSystemTask(taskName) {
+  private _registerSystemTask(taskName): void {
     const task = this._getSystemTask(taskName);
 
     if (!task.excludeTaskFromCli) {
@@ -127,39 +127,34 @@ export class BuildSystem implements IBuildSystem {
     task.generate(this.gulp, this.config, this);
   }
 
-  _getSystemTasks() {
+  private _getSystemTasks(): Array<string> {
     return Object.keys(systemTasks);
   }
 
-  _getSystemTask(taskName) {
+  private _getSystemTask(taskName): any {
     return systemTasks[taskName];
   }
 
-  _initializePlugins() {
+  private _initializePlugins(): void {
 
     const pluginsToInitialize = this._getPluginKeysOrderedByPriority();
 
     pluginsToInitialize.forEach((plugin) => {
-
       this._initializePlugin(plugin);
     });
   }
 
-  _initializePlugin(name) {
+  private _initializePlugin(name): void {
     const plugin = this._getPlugin(name);
     const configUsed = this._getResolvedPluginConfig(name);
     plugin.initializePlugin(this.gulp, configUsed, this);
   }
 
-  _registerTasksBeforePlugins() {
-
-  }
-
-  _registerTasksAfterPlugins() {
+  private _registerTasksAfterPlugins(): void {
     this._registerConventionalTasks();
   }
 
-  _registerConventionalTasks() {
+  private _registerConventionalTasks(): void {
     const conventionalTasks = Object.keys(this.config.conventionalTasks);
 
     conventionalTasks.forEach((conventionalTask) => {
@@ -236,7 +231,7 @@ export class BuildSystem implements IBuildSystem {
 
     this._registerTaskToCli(taskName, help);
 
-    return this.gulpAdapter.runTask(taskName, taskCallback);
+    return this.gulpAdapter.registerGulpTask(taskName, taskCallback);
   }
 
   private _registerTaskToCli(taskName: string, help: string): void {
@@ -245,14 +240,6 @@ export class BuildSystem implements IBuildSystem {
       .action((args, callback) => {
         return this._runTaskFromCli(taskName, args, callback);
       });
-  }
-
-  private _ensureTaskIsRegisteredToCli(taskName: string): void {
-    const isTaskRegisteredToCli = this.cli.find(taskName);
-
-    if (!isTaskRegisteredToCli) {
-      throw new Error('Task "${taskName}" is not registered.');
-    }
   }
 
   private _runTaskFromCli(taskName: string, args: ICliTaskArguments, callback: Function): void {
@@ -306,31 +293,35 @@ export class BuildSystem implements IBuildSystem {
     this.gulpAdapter.registerConventionalTask(taskName, taskConfig, buildTasks);
   }
 
-  private _getConventionalTaskConfig(taskName: string): IConventionalTaskConfiguration {
-    return this.config.conventionalTasks[taskName];
-  }
-
   private _getHelpForConventionalTask(taskName: string): string {
 
     const taskConfig = this._getConventionalTaskConfig(taskName);
 
-    if (!taskConfig) {
-      return 'help not found';
-    }
+    return taskConfig.help || 'help not found';
+  }
 
-    return this.config.conventionalTasks[taskName].help;
+  private _getConventionalTaskConfig(taskName: string): IConventionalTaskConfiguration {
+    return this.config.conventionalTasks[taskName];
   }
 
   private _getPluginKeysGroupedByPriority(): IGroupedPluginKeys {
 
     const allPluginKeys = this._getPluginKeys();
 
-    const groupedPluginKeys = groupBy(allPluginKeys, (key) => {
+    const groupedPluginKeys: IGroupedPluginKeys = {};
 
-      const config = this._getPluginConfig(key);
+    for (const pluginkey of allPluginKeys) {
 
-      return config.priority;
-    });
+      const config = this._getPluginConfig(pluginkey);
+
+      const groupHasMatchingEntry: boolean = groupedPluginKeys[config.priority] !== undefined;
+      if (groupHasMatchingEntry) {
+        groupedPluginKeys[config.priority].push(pluginkey);
+      } else {
+        groupedPluginKeys[config.priority] = [pluginkey];
+      }
+
+    }
 
     return groupedPluginKeys;
   }

@@ -1,4 +1,4 @@
-import * as groupBy from 'lodash.groupby';
+import {IGroupedPluginKeys} from '../interfaces';
 
 function sortTaskNames(taskNames) {
 
@@ -24,7 +24,9 @@ function generate(gulp, config, gulptraum) {
 
     const taskNames = Object.keys(gulp.tasks);
 
-    const groupedPluginKeys = groupBy(taskNames, (taskName) => {
+    const groupedPluginKeys: IGroupedPluginKeys = {};
+
+    for (const taskName of taskNames) {
 
       let topLevelTaskName = null;
 
@@ -38,8 +40,13 @@ function generate(gulp, config, gulptraum) {
         topLevelTaskName = taskName;
       }
 
-      return topLevelTaskName;
-    });
+      const groupHasMatchingKey: boolean = groupedPluginKeys[topLevelTaskName] !== undefined;
+      if (groupHasMatchingKey) {
+        groupedPluginKeys[topLevelTaskName].push(taskName);
+      } else {
+        groupedPluginKeys[topLevelTaskName] = [taskName];
+      }
+    }
 
     const groupKeys = Object.keys(groupedPluginKeys);
 
@@ -62,7 +69,6 @@ function generate(gulp, config, gulptraum) {
 
       console.log('--------------------------------------------------');
     });
-    // console.log(taskNames);
   });
 
 }

@@ -1,4 +1,4 @@
-import { IBuildSystemConfiguration, IBuildSystemPathsConfiguration } from "./index";
+import {IBuildSystemConfiguration, IBuildSystemPathsConfiguration} from "./index";
 
 export const DefaultBuildSystemConfig: IBuildSystemConfiguration<IBuildSystemPathsConfiguration> = {
   suppressErrors: false,

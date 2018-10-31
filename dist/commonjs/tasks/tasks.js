@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var groupBy = require("lodash.groupby");
 function sortTaskNames(taskNames) {
     var taskNamesSorted = taskNames.sort(function (nameA, nameB) {
         if (nameA < nameB) {
@@ -16,7 +15,9 @@ function sortTaskNames(taskNames) {
 function generate(gulp, config, gulptraum) {
     gulp.task('tasks', function () {
         var taskNames = Object.keys(gulp.tasks);
-        var groupedPluginKeys = groupBy(taskNames, function (taskName) {
+        var groupedPluginKeys = {};
+        for (var _i = 0, taskNames_1 = taskNames; _i < taskNames_1.length; _i++) {
+            var taskName = taskNames_1[_i];
             var topLevelTaskName = null;
             if (taskName.indexOf('-') > 0) {
                 var taskNameSegments = taskName.split('-');
@@ -25,8 +26,14 @@ function generate(gulp, config, gulptraum) {
             else {
                 topLevelTaskName = taskName;
             }
-            return topLevelTaskName;
-        });
+            var groupHasMatchingKey = groupedPluginKeys[topLevelTaskName] !== undefined;
+            if (groupHasMatchingKey) {
+                groupedPluginKeys[topLevelTaskName].push(taskName);
+            }
+            else {
+                groupedPluginKeys[topLevelTaskName] = [taskName];
+            }
+        }
         var groupKeys = Object.keys(groupedPluginKeys);
         groupKeys.forEach(function (groupKey) {
             var groupTasks = groupedPluginKeys[groupKey];

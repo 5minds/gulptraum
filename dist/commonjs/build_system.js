@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var path = require("path");
 var merge = require("deepmerge");
-var groupBy = require("lodash.groupby");
 var index_1 = require("./index");
 var child_process_1 = require("child_process");
 var vorpal = require("vorpal");
@@ -34,6 +33,16 @@ var BuildSystem = (function () {
     BuildSystem.prototype.initialize = function () {
         this.cli = vorpal();
     };
+    BuildSystem.prototype.registerTasks = function (externalGulp) {
+        this.gulp = externalGulp || gulp;
+        this._initializeGulpVersionAdapter();
+        this.config = this._mergeConfigs(index_1.DefaultBuildSystemConfig, this.config);
+        this._validateBuildSystemConfig(this.config);
+        this._registerTasksBeforePlugins();
+        this._initializePlugins();
+        this._registerTasksAfterPlugins();
+        this._registerSystemTasks();
+    };
     BuildSystem.prototype._initializeGulpVersionAdapter = function () {
         var isVersion3 = typeof Object.getPrototypeOf(this.gulp).run !== 'undefined';
         if (isVersion3) {
@@ -62,15 +71,7 @@ var BuildSystem = (function () {
             }
         }
     };
-    BuildSystem.prototype.registerTasks = function (externalGulp) {
-        this.gulp = externalGulp || gulp;
-        this._initializeGulpVersionAdapter();
-        this.config = this._mergeConfigs(index_1.DefaultBuildSystemConfig, this.config);
-        this._validateBuildSystemConfig(this.config);
-        this._registerTasksBeforePlugins();
-        this._initializePlugins();
-        this._registerTasksAfterPlugins();
-        this._registerSystemTasks();
+    BuildSystem.prototype._registerTasksBeforePlugins = function () {
     };
     BuildSystem.prototype._registerSystemTasks = function () {
         var _this = this;
@@ -103,8 +104,6 @@ var BuildSystem = (function () {
         var plugin = this._getPlugin(name);
         var configUsed = this._getResolvedPluginConfig(name);
         plugin.initializePlugin(this.gulp, configUsed, this);
-    };
-    BuildSystem.prototype._registerTasksBeforePlugins = function () {
     };
     BuildSystem.prototype._registerTasksAfterPlugins = function () {
         this._registerConventionalTasks();
@@ -159,7 +158,7 @@ var BuildSystem = (function () {
     BuildSystem.prototype.task = function (taskName, config, taskCallback) {
         var help = config.help || 'no help provided';
         this._registerTaskToCli(taskName, help);
-        return this.gulpAdapter.runTask(taskName, taskCallback);
+        return this.gulpAdapter.registerGulpTask(taskName, taskCallback);
     };
     BuildSystem.prototype._registerTaskToCli = function (taskName, help) {
         var _this = this;
@@ -167,12 +166,6 @@ var BuildSystem = (function () {
             .action(function (args, callback) {
             return _this._runTaskFromCli(taskName, args, callback);
         });
-    };
-    BuildSystem.prototype._ensureTaskIsRegisteredToCli = function (taskName) {
-        var isTaskRegisteredToCli = this.cli.find(taskName);
-        if (!isTaskRegisteredToCli) {
-            throw new Error('Task "${taskName}" is not registered.');
-        }
     };
     BuildSystem.prototype._runTaskFromCli = function (taskName, args, callback) {
         var optionKeys = Object.keys(args.options);
@@ -208,23 +201,27 @@ var BuildSystem = (function () {
         var buildTasks = this._getBuildTasksForConventionalTask(taskName);
         this.gulpAdapter.registerConventionalTask(taskName, taskConfig, buildTasks);
     };
+    BuildSystem.prototype._getHelpForConventionalTask = function (taskName) {
+        var taskConfig = this._getConventionalTaskConfig(taskName);
+        return taskConfig.help || 'help not found';
+    };
     BuildSystem.prototype._getConventionalTaskConfig = function (taskName) {
         return this.config.conventionalTasks[taskName];
     };
-    BuildSystem.prototype._getHelpForConventionalTask = function (taskName) {
-        var taskConfig = this._getConventionalTaskConfig(taskName);
-        if (!taskConfig) {
-            return 'help not found';
-        }
-        return this.config.conventionalTasks[taskName].help;
-    };
     BuildSystem.prototype._getPluginKeysGroupedByPriority = function () {
-        var _this = this;
         var allPluginKeys = this._getPluginKeys();
-        var groupedPluginKeys = groupBy(allPluginKeys, function (key) {
-            var config = _this._getPluginConfig(key);
-            return config.priority;
-        });
+        var groupedPluginKeys = {};
+        for (var _i = 0, allPluginKeys_1 = allPluginKeys; _i < allPluginKeys_1.length; _i++) {
+            var pluginkey = allPluginKeys_1[_i];
+            var config = this._getPluginConfig(pluginkey);
+            var groupHasMatchingEntry = groupedPluginKeys[config.priority] !== undefined;
+            if (groupHasMatchingEntry) {
+                groupedPluginKeys[config.priority].push(pluginkey);
+            }
+            else {
+                groupedPluginKeys[config.priority] = [pluginkey];
+            }
+        }
         return groupedPluginKeys;
     };
     BuildSystem.prototype._getPluginKeys = function () {

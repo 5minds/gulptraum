@@ -1,7 +1,3 @@
-import * as del from 'del';
-import * as vinylPaths from 'vinyl-paths';
-import * as path from 'path';
-
 export function generate(gulp, config, gulptraum): void {
 
   // const outputFolderPath = path.resolve(config.paths.root, config.paths.output);

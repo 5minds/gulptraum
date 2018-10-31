@@ -1,5 +1,7 @@
+declare function generate(gulp: any, config: any, gulptraum: any): void;
 export declare const command: {
-    generate: (gulp: any, config: any, gulptraum: any) => void;
+    generate: typeof generate;
     name: string;
     help: string;
 };
+export {};
