@@ -33,6 +33,16 @@ var BuildSystem = (function () {
     BuildSystem.prototype.initialize = function () {
         this.cli = vorpal();
     };
+    BuildSystem.prototype.registerTasks = function (externalGulp) {
+        this.gulp = externalGulp || gulp;
+        this._initializeGulpVersionAdapter();
+        this.config = this._mergeConfigs(index_1.DefaultBuildSystemConfig, this.config);
+        this._validateBuildSystemConfig(this.config);
+        this._registerTasksBeforePlugins();
+        this._initializePlugins();
+        this._registerTasksAfterPlugins();
+        this._registerSystemTasks();
+    };
     BuildSystem.prototype._initializeGulpVersionAdapter = function () {
         var isVersion3 = typeof Object.getPrototypeOf(this.gulp).run !== 'undefined';
         if (isVersion3) {
@@ -57,19 +67,11 @@ var BuildSystem = (function () {
                 }
             }
             catch (error) {
-
+                console.log(error);
             }
         }
     };
-    BuildSystem.prototype.registerTasks = function (externalGulp) {
-        this.gulp = externalGulp || gulp;
-        this._initializeGulpVersionAdapter();
-        this.config = this._mergeConfigs(index_1.DefaultBuildSystemConfig, this.config);
-        this._validateBuildSystemConfig(this.config);
-        this._registerTasksBeforePlugins();
-        this._initializePlugins();
-        this._registerTasksAfterPlugins();
-        this._registerSystemTasks();
+    BuildSystem.prototype._registerTasksBeforePlugins = function () {
     };
     BuildSystem.prototype._registerSystemTasks = function () {
         var _this = this;
@@ -101,10 +103,7 @@ var BuildSystem = (function () {
     BuildSystem.prototype._initializePlugin = function (name) {
         var plugin = this._getPlugin(name);
         var configUsed = this._getResolvedPluginConfig(name);
-
         plugin.initializePlugin(this.gulp, configUsed, this);
-    };
-    BuildSystem.prototype._registerTasksBeforePlugins = function () {
     };
     BuildSystem.prototype._registerTasksAfterPlugins = function () {
         this._registerConventionalTasks();
@@ -168,12 +167,6 @@ var BuildSystem = (function () {
             return _this._runTaskFromCli(taskName, args, callback);
         });
     };
-    BuildSystem.prototype._ensureTaskIsRegisteredToCli = function (taskName) {
-        var isTaskRegisteredToCli = this.cli.find(taskName);
-        if (!isTaskRegisteredToCli) {
-            throw new Error('Task "${taskName}" is not registered.');
-        }
-    };
     BuildSystem.prototype._runTaskFromCli = function (taskName, args, callback) {
         var optionKeys = Object.keys(args.options);
         var optionStrings = optionKeys.map(function (optionKey) {
@@ -190,6 +183,7 @@ var BuildSystem = (function () {
     };
     BuildSystem.prototype._runCommandInChildProcess = function (command, callback) {
         var commandCallback = function (error, stdout, stderr) {
+            console.log(stdout);
             callback();
         };
         var execOptions = {
@@ -207,29 +201,28 @@ var BuildSystem = (function () {
         var buildTasks = this._getBuildTasksForConventionalTask(taskName);
         this.gulpAdapter.registerConventionalTask(taskName, taskConfig, buildTasks);
     };
+    BuildSystem.prototype._getHelpForConventionalTask = function (taskName) {
+        var taskConfig = this._getConventionalTaskConfig(taskName);
+        return taskConfig.help || 'help not found';
+    };
     BuildSystem.prototype._getConventionalTaskConfig = function (taskName) {
         return this.config.conventionalTasks[taskName];
     };
-    BuildSystem.prototype._getHelpForConventionalTask = function (taskName) {
-        var taskConfig = this._getConventionalTaskConfig(taskName);
-        if (!taskConfig) {
-            return 'help not found';
-        }
-        return this.config.conventionalTasks[taskName].help;
-    };
     BuildSystem.prototype._getPluginKeysGroupedByPriority = function () {
-      const allPluginKeys = this._getPluginKeys();
-      const groupedPluginKeys = {};
-      for (const pluginkey of allPluginKeys) {
-        const config = this._getPluginConfig(pluginkey);
-        const groupHasMatchingEntry = groupedPluginKeys[config.priority] !== undefined;
-        if (groupHasMatchingEntry) {
-          groupedPluginKeys[config.priority].push(pluginkey);
-        } else {
-          groupedPluginKeys[config.priority] = [pluginkey];
+        var allPluginKeys = this._getPluginKeys();
+        var groupedPluginKeys = {};
+        for (var _i = 0, allPluginKeys_1 = allPluginKeys; _i < allPluginKeys_1.length; _i++) {
+            var pluginkey = allPluginKeys_1[_i];
+            var config = this._getPluginConfig(pluginkey);
+            var groupHasMatchingEntry = groupedPluginKeys[config.priority] !== undefined;
+            if (groupHasMatchingEntry) {
+                groupedPluginKeys[config.priority].push(pluginkey);
+            }
+            else {
+                groupedPluginKeys[config.priority] = [pluginkey];
+            }
         }
-      }
-      return groupedPluginKeys;
+        return groupedPluginKeys;
     };
     BuildSystem.prototype._getPluginKeys = function () {
         return Object.keys(this.pluginConfigs);
