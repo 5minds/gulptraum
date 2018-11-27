@@ -1,6 +1,6 @@
 {
   "name": "gulptraum",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Smart task generator for gulp to get a build pipeline and more in seconds.",
   "main": "dist/commonjs/index.js",
   "typings": "dist/index.d.ts",
@@ -38,12 +38,12 @@
   "homepage": "https://github.com/5minds/gulptraum#readme",
   "devDependencies": {
     "@types/gulp": "4.0.5",
-    "@types/node": "10.12.0",
-    "eslint": "5.7.0",
+    "@types/node": "10.12.10",
+    "eslint": "5.9.0",
     "eslint-config-5minds": "0.2.1",
     "eslint-plugin-import": "2.14.0",
-    "gulptraum": "3.0.0",
-    "gulptraum-typescript": "2.0.0",
+    "gulptraum": "^3.0.0",
+    "gulptraum-typescript": "~2.0.0",
     "tsconfig": "7.0.0",
     "tslint-config-5minds": "1.0.6"
   },
@@ -51,10 +51,10 @@
     "deepmerge": "2.2.1",
     "gulp": "4.0.0",
     "gulp-bump": "3.1.1",
-    "gulp-conventional-changelog": "2.0.3",
+    "gulp-conventional-changelog": "2.0.9",
     "gulp-shell": "0.6.5",
     "run-sequence": "2.2.1",
     "vorpal": "1.12.0",
-    "yargs": "12.0.2"
+    "yargs": "12.0.5"
   }
 }
