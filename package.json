@@ -37,24 +37,24 @@
   },
   "homepage": "https://github.com/5minds/gulptraum#readme",
   "devDependencies": {
-    "@types/gulp": "4.0.5",
-    "@types/node": "10.12.10",
-    "eslint": "5.9.0",
-    "eslint-config-5minds": "0.2.1",
-    "eslint-plugin-import": "2.14.0",
+    "@types/gulp": "^4.0.5",
+    "@types/node": "^10.12.10",
+    "eslint": "^5.14.1",
+    "eslint-config-5minds": "^0.2.1",
+    "eslint-plugin-import": "^2.14.0",
     "gulptraum": "^3.0.0",
     "gulptraum-typescript": "git@github.com:5minds/gulptraum-typescript.git#feature/remove_obsolete_build_scripts",
-    "tsconfig": "7.0.0",
-    "tslint-config-5minds": "1.0.6"
+    "tsconfig": "^7.0.0",
+    "tslint-config-5minds": "^1.0.6"
   },
   "dependencies": {
-    "deepmerge": "2.2.1",
-    "gulp": "4.0.0",
-    "gulp-bump": "3.1.1",
-    "gulp-conventional-changelog": "2.0.9",
-    "gulp-shell": "0.6.5",
-    "run-sequence": "2.2.1",
-    "vorpal": "1.12.0",
-    "yargs": "12.0.5"
+    "deepmerge": "~2.2.1",
+    "gulp": "~4.0.0",
+    "gulp-bump": "~3.1.1",
+    "gulp-conventional-changelog": "~2.0.9",
+    "gulp-shell": "~0.6.5",
+    "run-sequence": "~2.2.1",
+    "vorpal": "~1.12.0",
+    "yargs": "~12.0.5"
   }
 }
