@@ -43,7 +43,7 @@
     "eslint-config-5minds": "0.2.1",
     "eslint-plugin-import": "2.14.0",
     "gulptraum": "^3.0.0",
-    "gulptraum-typescript": "~2.0.0",
+    "gulptraum-typescript": "git@github.com:5minds/gulptraum-typescript.git#feature/remove_obsolete_build_scripts",
     "tsconfig": "7.0.0",
     "tslint-config-5minds": "1.0.6"
   },
